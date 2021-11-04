@@ -99,7 +99,7 @@ Route::group(['middleware' => ['auth']], function () {
     });
     Route::group(['middleware' => ['cek_login:pegawai', 'cek_atasanpenilai:ya']], function () {
         Route::get('/greeting3', function () {
-            return 'Hello World';
+            return 'Hello World test';
         });
     });
 
@@ -111,7 +111,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::group(['middleware' => ['cek_login:pegawai', 'cek_dinilai:ya']], function () {
         Route::get('/greeting2', function () {
-            return 'Hello World2';
+            return 'Hello World2 test';
         });
     });
 });
