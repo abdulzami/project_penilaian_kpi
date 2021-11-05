@@ -14,7 +14,7 @@
                 <h4>Edit Struktural</h4>
             </div>
         </div>
-        <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+        <div class="col-sm-12 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('struktural') }}">Struktural</a></li>
                 <li class="breadcrumb-item active">Edit Struktural</li>
@@ -23,7 +23,7 @@
     </div>
 @endsection
 @section('content')
-    <div class="card col-xl-6">
+    <div class="card col-xl-12">
         <div class="card-header">
             <h4 class="card-title">Form Edit Struktural</h4>
         </div>

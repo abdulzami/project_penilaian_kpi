@@ -21,13 +21,13 @@
     </div>
 @endsection
 @section('content')
-    <a href="{{ route('create-bidang',$id) }}"><button type="button" class="btn btn-xs mb-3 btn-primary mb-1">Tambah
-            Data</button></a>
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Data Bidang</h4>
+                    <a href="{{ route('create-bidang',$id) }}"><button type="button" class="btn btn-xs mb-3 btn-primary mb-1">Tambah
+                            Data</button></a>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

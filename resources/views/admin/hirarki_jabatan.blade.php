@@ -21,7 +21,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-xl-6 col-xxl-3 col-lg-6 col-md-6 col-sm-6">
+        <div class="col-xl-6 col-xxl-6 col-lg-6 col-md-6 col-sm-6">
             <div class="widget-stat card">
                 <div class="card-body p-4">
                     <div class="media ai-icon">
@@ -37,13 +37,13 @@
                                 @endif
                                 
                             </span></h4>
-                            <p class="mb-0">Penilai</p>
+                            <p class="mb-0">Atasan Langsung</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-6 col-xxl-3 col-lg-6 col-md-6 col-sm-6">
+        <div class="col-xl-6 col-xxl-6 col-lg-6 col-md-6 col-sm-6">
             <div class="widget-stat card">
                 <div class="card-body p-4">
                     <div class="media ai-icon">
@@ -59,7 +59,7 @@
                                     Tidak ada
                                 @endif    
                             </span></h4>
-                            <p class="mb-0">Atasan Penilai</p>
+                            <p class="mb-0">Atasan Tidak Langsung</p>
                         </div>
                     </div>
                 </div>

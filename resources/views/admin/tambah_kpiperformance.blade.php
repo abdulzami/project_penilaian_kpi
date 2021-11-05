@@ -23,7 +23,7 @@
 @endsection
 @section('content')
 
-    <div class="card col-xl-6">
+    <div class="card col-xl-12">
         <div class="card-header">
             <h4 class="card-title">Form Tambah KPI Performance</h4>
         </div>
