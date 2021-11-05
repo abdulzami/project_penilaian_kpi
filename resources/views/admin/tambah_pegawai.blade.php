@@ -21,7 +21,7 @@
     </div>
 @endsection
 @section('content')
-    <div class="card col-xl-6">
+    <div class="card col-xl-12">
         <div class="card-header">
             <h4 class="card-title">Form Tambah Pegawai</h4>
         </div>
