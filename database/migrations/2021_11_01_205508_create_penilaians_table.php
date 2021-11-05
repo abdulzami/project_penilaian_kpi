@@ -16,7 +16,6 @@ class CreatePenilaiansTable extends Migration
         Schema::create('penilaians', function (Blueprint $table) {
             $table->id('id_penilaian');
             $table->unsignedBigInteger('id_pegawai');
-            $table->unsignedBigInteger('id_penilai');
             $table->unsignedBigInteger('id_jadwal');
             $table->string('status_penilaian');
             $table->string('catatan_penting');
@@ -24,7 +23,6 @@ class CreatePenilaiansTable extends Migration
             $table->timestamps();
 
             $table->foreign('id_pegawai')->references('id_user')->on('users');
-            $table->foreign('id_penilai')->references('id_user')->on('users');
             $table->foreign('id_jadwal')->references('id_jadwal')->on('jadwals');
         });
     }
