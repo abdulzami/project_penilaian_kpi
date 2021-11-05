@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Jabatan;
 use App\Models\Jadwal;
+use App\Models\Penilaian;
+use App\Models\User;
 use Carbon\Carbon;
 use DateInterval;
 use DatePeriod;
@@ -124,12 +126,24 @@ class JadwalController extends Controller
                     if (in_array("tidak", $c)) {
                         return back()->with('gagal', 'Suatu jabatan ada yang belum mempunyai pegawai');
                     } else {
+                        $pegawais = User::select('users.id_user')
+                        ->join('jabatans','jabatans.id_jabatan','=','users.id_jabatan')
+                        ->where('jabatans.id_penilai','!=',null)
+                        ->where('level','pegawai')->get();
                         try {
-                            Jadwal::create([
+                            $jadwal = Jadwal::create([
                                 'nama_periode' => $request->nama_periode,
                                 'tanggal_mulai' => $request->tanggal_mulai,
                                 'tanggal_akhir' => $request->tanggal_akhir,
                             ]);
+
+                            foreach($pegawais as $pegawai){
+                                Penilaian::create([
+                                    'id_pegawai' => $pegawai->id_user,
+                                    'id_jadwal' => $jadwal->id_jadwal,
+                                    'status_penilaian' => 'belum_dinilai'
+                                ]);
+                            }
                         } catch (\Illuminate\Database\QueryException $ex) {
                             return back()->with('gagal', 'Gagal menambahkan jadwal');
                         }

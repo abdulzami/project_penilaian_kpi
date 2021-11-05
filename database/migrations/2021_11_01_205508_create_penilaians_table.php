@@ -17,11 +17,13 @@ class CreatePenilaiansTable extends Migration
             $table->id('id_penilaian');
             $table->unsignedBigInteger('id_pegawai');
             $table->unsignedBigInteger('id_jadwal');
+            $table->unsignedBigInteger('id_penilai')->nullable();
             $table->string('status_penilaian');
-            $table->string('catatan_penting');
-            $table->integer('pengurangan');
+            $table->string('catatan_penting')->nullable();
+            $table->integer('pengurangan')->nullable();
             $table->timestamps();
-
+            
+            $table->foreign('id_penilai')->references('id_user')->on('users');
             $table->foreign('id_pegawai')->references('id_user')->on('users');
             $table->foreign('id_jadwal')->references('id_jadwal')->on('jadwals');
         });

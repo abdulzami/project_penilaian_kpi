@@ -13,7 +13,6 @@ class Penilaian extends Model
 
     protected $fillable = [
         'id_pegawai',
-        'id_penilai',
         'id_jadwal',
         'status_penilaian',
         'catatan_penting',

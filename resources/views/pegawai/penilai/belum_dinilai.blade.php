@@ -42,17 +42,10 @@
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ $dinilai->nama }}</td>
-                                        <td>{{ $dinilai->nama_jabatan }}</td>
+                                        <td>{{ $dinilai->nama_jabatan }} {{$dinilai->nama_struktural}} {{$dinilai->nama_bidang}}</td>
                                         <td>
-                                            @if ($dinilai->total_bobot_jabatan == '100')
-                                                <a class="btn btn-xs btn-secondary mb-1"
-                                                    href="#">Lakukan
-                                                    Penilaian</a>
-                                            @else
-                                                <span class="badge badge-lg badge-danger">Tidak bisa dilakukan penilaian</span>
-                                            @endif
-
-
+                                            <a class="btn btn-xs btn-secondary mb-1" href="#">Lakukan
+                                                Penilaian</a>
                                         </td>
                                         {{-- <td>
 

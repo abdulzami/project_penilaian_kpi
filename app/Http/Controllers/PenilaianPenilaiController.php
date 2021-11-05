@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Jabatan;
+use App\Models\Jadwal;
 use App\Models\KpiPerformance;
 use App\Models\User;
+use Carbon\Carbon;
 use Hashids\Hashids;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,22 +19,21 @@ class PenilaianPenilaiController extends Controller
     {
         $hash = new Hashids();
         $user = Auth::user();
-        // $dinilais = Jabatan::leftJoin('kpi_performances','jabatans.id_jabatan','=','kpi_performances.id_jabatan')
-        // ->select('jabatans.id_jabatan','jabatans.nama_jabatan',DB::raw('SUM(kpi_performances.bobot) as total_bobot'))
-        // ->groupBy('kpi_performances.id_jabatan','jabatans.id_jabatan','jabatans.nama_jabatan')
-        // ->get();
-        // return $dinilais;
-        $dinilais = Jabatan::
-         select('users.id_user','users.nama','jabatans.nama_jabatan','penilaians.id_penilaian',DB::raw('SUM(kpi_performances.bobot) as total_bobot_jabatan'))
-        ->join('users','jabatans.id_jabatan','=','users.id_jabatan')
-        ->leftJoin('penilaians','users.id_user','=','penilaians.id_pegawai')
-        ->leftJoin('kpi_performances','users.id_jabatan','=','kpi_performances.id_jabatan')
-        ->where('jabatans.id_penilai',$user->id_jabatan)
-        ->where('penilaians.status_penilaian',null)
-        ->groupBy('users.id_user','users.nama','jabatans.nama_jabatan','penilaians.id_penilaian')
-        ->get();
 
-        return $dinilais;
+        $sekarang = Carbon::now();
+        $sekarang = $sekarang->toDateString();
+        $jadwal = Jadwal::select('id_jadwal')->whereRaw('? between tanggal_mulai and tanggal_akhir', $sekarang)->first();
+        $dinilais = Jabatan::
+         select('users.id_user','users.nama','jabatans.nama_jabatan','penilaians.status_penilaian','strukturals.nama_struktural','bidangs.nama_bidang')
+        ->join('users','jabatans.id_jabatan','=','users.id_jabatan')
+        ->join('bidangs','jabatans.id_bidang','=','bidangs.id_bidang')
+        ->join('strukturals','bidangs.id_struktural','strukturals.id_struktural')
+        ->leftJoin('penilaians','users.id_user','=','penilaians.id_pegawai')
+        ->where('jabatans.id_penilai',$user->id_jabatan)
+        ->where('penilaians.status_penilaian','belum_dinilai')
+        ->where('penilaians.id_jadwal',$jadwal->id_jadwal)
+        ->groupBy('users.id_user','users.nama','jabatans.nama_jabatan','penilaians.id_jadwal','penilaians.status_penilaian','strukturals.nama_struktural','bidangs.nama_bidang')
+        ->get();
         return view('pegawai.penilai.belum_dinilai',compact('dinilais','hash'));
     }
 }
