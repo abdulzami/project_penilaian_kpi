@@ -1,7 +1,6 @@
 @extends('layouts.master')
 
 @push('custom-css')
-    <link href="{{ asset('assets/vendor/datatables/css/jquery.dataTables.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assets/vendor/toastr/css/toastr.min.css') }}">
 @endpush
 @section('content-header')
@@ -51,9 +50,6 @@
     </div>
 @endsection
 @push('custom-script')
-    <script src="{{ asset('assets/vendor/datatables/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('assets/js/plugins-init/datatables.init.js') }}"></script>
-    <!-- Toastr -->
     <script src="{{ asset('assets/vendor/toastr/js/toastr.min.js') }}"></script>
     @if (session('success'))
         <script>

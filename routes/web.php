@@ -7,6 +7,7 @@ use App\Http\Controllers\StrukturalController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\KpiperformanceController;
+use App\Http\Controllers\KpiperilakuController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\PenilaianPenilaiController;
 use App\Http\Controllers\PenilaiController;
@@ -95,6 +96,10 @@ Route::group(['middleware' => ['auth']], function () {
         Route::delete('/jadwal/delete/{id}', [JadwalController::class, 'destroy'])->name('delete-jadwal');
         Route::put('/jadwal/update/{id}', [JadwalController::class, 'update'])->name('update-jadwal');
         //end jadwal
+
+        //start kpi perilaku
+        Route::get('/kpi-perilaku', [KpiperilakuController::class, 'index'])->name('kpiperilaku');
+        //end kpi perilaku
 
     });
     Route::group(['middleware' => ['cek_login:pegawai', 'cek_atasanpenilai:ya']], function () {

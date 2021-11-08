@@ -21,6 +21,12 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ route('kpiperilaku') }}" class="ai-icon" aria-expanded="false">
+                        <i class="flaticon-381-list"></i>
+                        <span class="nav-text">KPI Perilaku</span>
+                    </a>
+                </li>
+                <li>
                     <a href="{{ route('pegawai') }}" class="ai-icon" aria-expanded="false">
                         <i class="flaticon-381-user-8"></i>
                         <span class="nav-text">Pegawai</span>
