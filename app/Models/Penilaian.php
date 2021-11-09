@@ -18,4 +18,14 @@ class Penilaian extends Model
         'catatan_penting',
         'pengurangan'
     ];
+
+    public function penilaianperformances()
+    {
+        return $this->hasMany(PenilaianPerformance::class,'id_penilaian','id_penilaian');
+    }
+
+    public function penilaianperilakus()
+    {
+        return $this->hasMany(PenilaianPerilaku::class,'id_penilaian','id_penilaian');
+    }
 }

@@ -16,7 +16,7 @@ class CreateKpiPerformancesTable extends Migration
         Schema::create('kpi_performances', function (Blueprint $table) {
             $table->id('id_performance');
             $table->enum('kategori',['kualitas','waktu','kuantitas','biaya']);
-            $table->enum('tipe_performance',['maximum','minimize']);
+            $table->enum('tipe_performance',['max','min']);
             $table->unsignedBigInteger('id_jabatan');
             $table->string('indikator_kpi');
             $table->string('definisi');

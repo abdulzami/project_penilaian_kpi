@@ -7,90 +7,39 @@
     <div class="row page-titles mx-0">
         <div class="col-sm-6 p-md-0">
             <div class="welcome-text">
-                <h4>KPI Perfomance {{ $nama_jabatan }}</h4>
+                <h4>Penilaian KPI Performance</h4>
             </div>
         </div>
         <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('jabatan') }}">Jabatan</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('kpiperformance', $id) }}">Manajemen KPI Perfomance
-                        {{ $nama_jabatan }}</a></li>
-                <li class="breadcrumb-item acrtive">Tambah KPI Perfomance</li>
+                <li class="breadcrumb-item"><a href="{{ route('belum-dinilai') }}">Penilaian Belum Dinilai</a></li>
+                <li class="breadcrumb-item active">KPI Performance - {{ $pegawai->npk }} - {{ $pegawai->nama }}</li>
             </ol>
         </div>
     </div>
 @endsection
 @section('content')
-
     <div class="card col-xl-12">
         <div class="card-header">
-            <h4 class="card-title">Form Tambah KPI Performance</h4>
+            <h4 class="card-title">Form Catatan Penting</h4>
         </div>
         <div class="card-body">
             <div class="basic-form">
-                <form action="{{ route('store-kpiperformance', $id) }}" method="post">
+                <form action="{{route('belum-dinilai-catatan-penting-update',$id)}}" method="post">
                     @csrf
+                    @method('put')
                     <div class="form-group">
-                        <label>Kategori</label>
-                        <select class="form-control" name="kategori">
-                            <option value="">Pilih</option>
-                            <option value="biaya">Biaya</option>
-                            <option value="kualitas">Kualitas</option>
-                            <option value="kuantitas">Kuantitas</option>
-                            <option value="waktu">Waktu</option>
-                        </select>
+                        <label>Catatan Penting</label>
+                        <textarea  class="form-control" name="catatan_penting" cols="30" rows="10">{{$catatan_penting}}</textarea>
                     </div>
-                    <div class="form-group">
-                        <label>Tipe Performance</label>
-                        <select class="form-control" name="tipe_perform">
-                            <option value="">Pilih</option>
-                            <option value="max">max</option>
-                            <option value="min">min</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Indikator KPI</label>
-                        <input type="text" class="form-control" placeholder="Masukkan Indikator KPI" name="indikator_kpi">
-                    </div>
-                    <div class="form-group">
-                        <label>Definisi</label>
-                        <textarea name="definisi" placeholder="Masukkan Definisi" class="form-control"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Satuan</label>
-                        <input type="text" id="satuan" class="form-control" placeholder="Masukkan Satuan" name="satuan">
-                    </div>
-                    <label>Target</label>
-                    <div class="input-group mb-3">
-                        <input type="text" name="target" placeholder="Masukkan Target" class="form-control">
-                        <div class="input-group-append">
-                            <span class="input-group-text" id="satuant"></span>
-                        </div>
-                    </div>
-                    <label>Bobot</label>
-                    <div class="input-group">
-                        <input type="number" name="bobot" placeholder="Masukkan Bobot" class="form-control">
-                        <div class="input-group-append">
-                            <span class="input-group-text">%</span>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-sm btn-primary mt-3" cl>Simpan</button>
+                    <button type="submit" class="btn btn-sm btn-primary mt-3">Simpan</button>
                 </form>
             </div>
         </div>
     </div>
 @endsection
 @push('custom-script')
-    <!-- Toastr -->
     <script src="{{ asset('assets/vendor/toastr/js/toastr.min.js') }}"></script>
-    <script>
-        let satuan = document.querySelector('#satuan');
-        satuan.addEventListener('keyup', function() {
-            let textEntered = satuan.value
-            let targetSatuan = document.querySelector('#satuant')
-            targetSatuan.innerText = textEntered;
-        })
-    </script>
     @if (session('success'))
         <script>
             toastr.success('{{ session('success') }}', 'Sukses', {

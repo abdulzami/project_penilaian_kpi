@@ -81,7 +81,7 @@ class KpiperformanceController extends Controller
                     'satuan' => 'required|max:20|min:1',
                     'target' => 'required|numeric|max:200|min:1',
                     'bobot' => 'required|numeric|max:100|min:1',
-                    'tipe_perform' => 'required|max:100|min:4',
+                    'tipe_perform' => 'required|max:100|min:3',
                 ]
             );
             
@@ -164,9 +164,12 @@ class KpiperformanceController extends Controller
                     'satuan' => 'required|max:20|min:1',
                     'target' => 'required|numeric|max:200|min:1',
                     'bobot' => 'required|numeric|max:100|min:1',
-                    'tipe_perform' => 'required|max:100|min:4',
+                    'tipe_perform' => 'required|max:100|min:3',
                 ]
             );
+            if(str_contains($request->target,',')){
+                $request->target = str_replace(',','.',$request->target);
+            }
             try {
                 $kpips->first()->update([
                     'kategori' => $request->kategori,

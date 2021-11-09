@@ -110,7 +110,18 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::group(['middleware' => ['cek_login:pegawai', 'cek_penilai:ya']], function () {
         Route::group(['middleware' => ['cek_berlangsung:ya']], function () {
-            Route::get('/belum_dinilai', [PenilaianPenilaiController::class, 'show_belum_dinilai'])->name('belum-dinilai');
+            Route::get('/belum-dinilai', [PenilaianPenilaiController::class, 'show_belum_dinilai'])->name('belum-dinilai');
+            
+            Route::get('/belum-dinilai/{id}/kpi-performance', [PenilaianPenilaiController::class, 'create_penilaian_kpi_performance'])->name('belum-dinilai-kpi-performance');
+            Route::post('/belum-dinilai/{id}/kpi-performance/store', [PenilaianPenilaiController::class, 'store_penilaian_kpi_performance'])->name('belum-dinilai-kpi-performance-store');
+            Route::put('/belum-dinilai/{id}/kpi-performance/update', [PenilaianPenilaiController::class, 'update_penilaian_kpi_performance'])->name('belum-dinilai-kpi-performance-update');
+            
+            Route::get('/belum-dinilai/{id}/kpi-perilaku', [PenilaianPenilaiController::class, 'create_penilaian_kpi_perilaku'])->name('belum-dinilai-kpi-perilaku');
+            Route::post('/belum-dinilai/{id}/kpi-perilaku/store', [PenilaianPenilaiController::class, 'store_penilaian_kpi_perilaku'])->name('belum-dinilai-kpi-perilaku-store');
+            Route::put('/belum-dinilai/{id}/kpi-perilaku/update', [PenilaianPenilaiController::class, 'update_penilaian_kpi_perilaku'])->name('belum-dinilai-kpi-perilaku-update');
+
+            Route::get('/belum-dinilai/{id}/catatan-penting', [PenilaianPenilaiController::class, 'penilaian_catatan_penting'])->name('belum-dinilai-catatan-penting');
+            Route::put('/belum-dinilai/{id}/catatan-penting/update', [PenilaianPenilaiController::class, 'update_penilaian_catatan_penting'])->name('belum-dinilai-catatan-penting-update');
         });
     });
 

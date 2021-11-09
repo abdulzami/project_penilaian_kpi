@@ -61,16 +61,16 @@
                         <label>Tipe Performance</label>
                         <select class="form-control" name="tipe_perform">
                             <option value="">Pilih</option>
-                            <option value="maximum"
-                            @if ($kpips->tipe_performance == "maximum")
+                            <option value="max"
+                            @if ($kpips->tipe_performance == "max")
                                 selected
                             @endif
-                            >Maximize</option>
-                            <option value="minimize"
-                            @if ($kpips->tipe_performance == "minimize")
+                            >max</option>
+                            <option value="min"
+                            @if ($kpips->tipe_performance == "min")
                                 selected
                             @endif
-                            >Minimize</option>
+                            >min</option>
                         </select>
                     </div>
                     <div class="form-group">

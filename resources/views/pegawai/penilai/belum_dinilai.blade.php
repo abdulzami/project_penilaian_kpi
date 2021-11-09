@@ -14,7 +14,7 @@
         </div>
         <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('belum-dinilai') }}"></a></li>
+                <li class="breadcrumb-item active">Penilaian Belum Dinilai</li>
             </ol>
         </div>
     </div>
@@ -32,6 +32,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>NPK</th>
                                     <th>Nama Pegawai</th>
                                     <th>Jabatan</th>
                                     <th>Action</th>
@@ -41,11 +42,13 @@
                                 @foreach ($dinilais as $index => $dinilai)
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
+                                        <td>{{$dinilai->npk}}</td>
                                         <td>{{ $dinilai->nama }}</td>
                                         <td>{{ $dinilai->nama_jabatan }} {{$dinilai->nama_struktural}} {{$dinilai->nama_bidang}}</td>
                                         <td>
-                                            <a class="btn btn-xs btn-secondary mb-1" href="#">Lakukan
-                                                Penilaian</a>
+                                            <a class="btn btn-xs btn-info mb-1" href="{{route('belum-dinilai-kpi-performance',$hash->encode($dinilai->id_penilaian))}}">KPI Performance</a>
+                                            <a class="btn btn-xs btn-warning mb-1" href="{{route('belum-dinilai-kpi-perilaku',$hash->encode($dinilai->id_penilaian))}}">KPI Perilaku</a>
+                                            <a class="btn btn-xs btn-dark mb-1" href="{{route('belum-dinilai-catatan-penting',$hash->encode($dinilai->id_penilaian))}}">Catatan Penting</a>
                                         </td>
                                         {{-- <td>
 
