@@ -127,9 +127,9 @@ class JadwalController extends Controller
                         return back()->with('gagal', 'Suatu jabatan ada yang belum mempunyai pegawai');
                     } else {
                         $pegawais = User::select('users.id_user')
-                        ->join('jabatans','jabatans.id_jabatan','=','users.id_jabatan')
-                        ->where('jabatans.id_penilai','!=',null)
-                        ->where('level','pegawai')->get();
+                            ->join('jabatans', 'jabatans.id_jabatan', '=', 'users.id_jabatan')
+                            ->where('jabatans.id_penilai', '!=', null)
+                            ->where('level', 'pegawai')->get();
                         try {
                             $jadwal = Jadwal::create([
                                 'nama_periode' => $request->nama_periode,
@@ -137,7 +137,7 @@ class JadwalController extends Controller
                                 'tanggal_akhir' => $request->tanggal_akhir,
                             ]);
 
-                            foreach($pegawais as $pegawai){
+                            foreach ($pegawais as $pegawai) {
                                 Penilaian::create([
                                     'id_pegawai' => $pegawai->id_user,
                                     'id_jadwal' => $jadwal->id_jadwal,
@@ -177,11 +177,7 @@ class JadwalController extends Controller
         $hash = new Hashids();
         $id_jadwal = $hash->decode($id);
         $jadwals = Jadwal::find($id_jadwal);
-        if ($jadwals->isEmpty()) {
-            abort(404);
-        } else {
-            return view('admin.edit_jadwal', compact('jadwals', 'id'));
-        }
+        return view('admin.edit_jadwal', compact('jadwals', 'id'));
     }
 
     /**
@@ -195,50 +191,45 @@ class JadwalController extends Controller
     {
         $hash = new Hashids();
         $id_jadwal = $hash->decode($id);
-        $jadwals = Jadwal::find($id_jadwal);
-        if ($jadwals->isEmpty()) {
-            abort(404);
-        } else {
-            if ($request->tanggal_akhir > $request->tanggal_mulai) {
-                request()->validate(
-                    [
-                        'nama_periode' => 'required|max:100|min:4',
-                        'tanggal_mulai' => 'required|date',
-                        'tanggal_akhir' => 'required|date',
-                    ]
-                );
-                $tanggal_mulai = $request->tanggal_mulai;
-                $tanggal_akhir = $request->tanggal_akhir;
+        if ($request->tanggal_akhir > $request->tanggal_mulai) {
+            request()->validate(
+                [
+                    'nama_periode' => 'required|max:100|min:4',
+                    'tanggal_mulai' => 'required|date',
+                    'tanggal_akhir' => 'required|date',
+                ]
+            );
+            $tanggal_mulai = $request->tanggal_mulai;
+            $tanggal_akhir = $request->tanggal_akhir;
 
-                $a = array();
+            $a = array();
 
-                $tanggal2 = $this->getDatesFromRange($tanggal_mulai, $tanggal_akhir);
-                foreach ($tanggal2 as $tanggal) {
-                    $jadwal = Jadwal::whereRaw('? between tanggal_mulai and tanggal_akhir', $tanggal)->where('id_jadwal', '!=', $id_jadwal)->get();
-                    if ($jadwal->isEmpty()) {
-                        array_push($a, "tidak");
-                    } else {
-                        array_push($a, "ya");
-                    }
-                }
-
-                if (in_array("ya", $a)) {
-                    return back()->with('gagal', 'Jadwal sudah ada');
+            $tanggal2 = $this->getDatesFromRange($tanggal_mulai, $tanggal_akhir);
+            foreach ($tanggal2 as $tanggal) {
+                $jadwal = Jadwal::whereRaw('? between tanggal_mulai and tanggal_akhir', $tanggal)->where('id_jadwal', '!=', $id_jadwal)->get();
+                if ($jadwal->isEmpty()) {
+                    array_push($a, "tidak");
                 } else {
-                    try {
-                        Jadwal::where('id_jadwal', $id_jadwal)->update([
-                            'nama_periode' => $request->nama_periode,
-                            'tanggal_mulai' => $request->tanggal_mulai,
-                            'tanggal_akhir' => $request->tanggal_akhir,
-                        ]);
-                    } catch (\Illuminate\Database\QueryException $ex) {
-                        return back()->with('gagal', 'Gagal mengubah jadwal');
-                    }
-                    return back()->with('success', 'Sukses mengubah jadwal');
+                    array_push($a, "ya");
                 }
-            } else {
-                return back()->with('gagal', 'tanggal mulai harus lebih kecil dari tanggal akhir');
             }
+
+            if (in_array("ya", $a)) {
+                return back()->with('gagal', 'Jadwal sudah ada');
+            } else {
+                try {
+                    Jadwal::where('id_jadwal', $id_jadwal)->update([
+                        'nama_periode' => $request->nama_periode,
+                        'tanggal_mulai' => $request->tanggal_mulai,
+                        'tanggal_akhir' => $request->tanggal_akhir,
+                    ]);
+                } catch (\Illuminate\Database\QueryException $ex) {
+                    return back()->with('gagal', 'Gagal mengubah jadwal');
+                }
+                return back()->with('success', 'Sukses mengubah jadwal');
+            }
+        } else {
+            return back()->with('gagal', 'tanggal mulai harus lebih kecil dari tanggal akhir');
         }
     }
 
@@ -252,16 +243,11 @@ class JadwalController extends Controller
     {
         $hash = new Hashids();
         $id_jadwal = $hash->decode($id);
-        $jadwals = Jadwal::find($id_jadwal);
-        if ($jadwals->isEmpty()) {
-            abort(404);
-        } else {
-            try {
-                Jadwal::where('id_jadwal', $id_jadwal)->first()->delete();
-            } catch (\Illuminate\Database\QueryException $ex) {
-                return back()->with('gagal', 'Gagal menghapus jadwal');
-            }
-            return back()->with('success', 'Sukses menghapus jadwal');
+        try {
+            Jadwal::where('id_jadwal', $id_jadwal)->first()->delete();
+        } catch (\Illuminate\Database\QueryException $ex) {
+            return back()->with('gagal', 'Gagal menghapus jadwal');
         }
+        return back()->with('success', 'Sukses menghapus jadwal');
     }
 }

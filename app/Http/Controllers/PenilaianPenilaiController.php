@@ -37,7 +37,24 @@ class PenilaianPenilaiController extends Controller
             ->where('penilaians.id_jadwal', $jadwal->id_jadwal)
             ->groupBy('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.id_jadwal', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian')
             ->get();
-
+        for ($i = 0; $i < sizeof($dinilais); $i++) {
+            $performances = PenilaianPerformance::select(DB::raw("CASE
+                WHEN tipe_performance = 'min' AND target>realisasi THEN 100
+                WHEN tipe_performance = 'min' THEN ((target/realisasi)*100)*bobot/100
+                WHEN tipe_performance = 'max' THEN ((realisasi/target) * 100)*bobot/100
+                END AS skor"))
+                ->join('kpi_performances', 'kpi_performances.id_performance', '=', 'penilaian_performances.id_performance')
+                ->where('id_penilaian', $dinilais[$i]->id_penilaian)->get();
+            $performances = $performances->sum('skor');
+            $performances = $performances * 70 / 100;
+            $perilakus = PenilaianPerilaku::select(DB::raw('SUM(nilai_perilaku *20 * 100/6/100)*30/100 AS skor_akhir'))->where('id_penilaian', $dinilais[$i]->id_penilaian)->get();
+            $perilakus = (float)$perilakus[0]->skor_akhir;
+            $total = round(($performances + $perilakus), 5);
+            $dinilais[$i]->performance = $performances;
+            $dinilais[$i]->perilaku = $perilakus;
+            $dinilais[$i]->total = $total;
+            $dinilais[$i]->capaian = $total . " %";
+        }
         return view('pegawai.penilai.belum_dinilai', compact('dinilais', 'hash'));
     }
     //start performance
@@ -83,7 +100,7 @@ class PenilaianPenilaiController extends Controller
                 ]);
             }
         } catch (\Illuminate\Database\QueryException $ex) {
-            $pperformance = PenilaianPerformance::where('id_penilaian',$id_penilaian);
+            $pperformance = PenilaianPerformance::where('id_penilaian', $id_penilaian);
             $pperformance->delete();
             return back()->with('gagal', 'Gagal melakukan penilaian kpi performance. Tidak boleh ada yang kosong atau format salah');
         }
@@ -123,7 +140,7 @@ class PenilaianPenilaiController extends Controller
         $perilakus = KpiPerilaku::select('id_perilaku', 'nama_kpi', 'ekselen', 'baik', 'cukup', 'kurang', 'kurang_sekali')->get();
         $penilaianperilakus = KpiPerilaku::select('kpi_perilakus.id_perilaku', 'nama_kpi', 'ekselen', 'baik', 'cukup', 'kurang', 'kurang_sekali', 'nilai_perilaku')
             ->join('penilaian_perilakus', 'penilaian_perilakus.id_perilaku', '=', 'kpi_perilakus.id_perilaku')
-            ->where('penilaian_perilakus.id_penilaian',$id_penilaian)
+            ->where('penilaian_perilakus.id_penilaian', $id_penilaian)
             ->get();
         if ($penilaianperilakus->isEmpty()) {
             return view('pegawai.penilai.create_penilaian_kpi_perilaku', compact('perilakus', 'hash', 'pegawai', 'id'));
@@ -141,7 +158,7 @@ class PenilaianPenilaiController extends Controller
             foreach ($perilakus as  $perilaku) {
                 $nameinput = $id . $hash->encode($perilaku->id_perilaku);
                 if ($request->$nameinput < 1 || $request->$nameinput > 5) {
-                    $pperilaku = PenilaianPerilaku::where('id_penilaian',$id_penilaian);
+                    $pperilaku = PenilaianPerilaku::where('id_penilaian', $id_penilaian);
                     $pperilaku->delete();
                     return back()->with('gagal', 'Gagal melakukan penilaian kpi perilaku. Tidak boleh ada yang kosong atau format salah');
                 }
@@ -152,7 +169,7 @@ class PenilaianPenilaiController extends Controller
                 ]);
             }
         } catch (\Illuminate\Database\QueryException $ex) {
-            $pperilaku = PenilaianPerilaku::where('id_penilaian',$id_penilaian);
+            $pperilaku = PenilaianPerilaku::where('id_penilaian', $id_penilaian);
             $pperilaku->delete();
             return back()->with('gagal', 'Gagal melakukan penilaian kpi perilaku. Tidak boleh ada yang kosong atau format salah');
         }
@@ -185,14 +202,14 @@ class PenilaianPenilaiController extends Controller
     {
         $hash = new Hashids();
         $id_penilaian = $hash->decode($id);
-        $penilaian = Penilaian::select('id_pegawai','catatan_penting')->find($id_penilaian);
+        $penilaian = Penilaian::select('id_pegawai', 'catatan_penting')->find($id_penilaian);
         $id_pegawai = $penilaian[0]->id_pegawai;
         $pegawai = User::find($id_pegawai);
         $catatan_penting = $penilaian[0]->catatan_penting;
-        return view('pegawai.penilai.catatan_penting',compact('catatan_penting', 'hash', 'pegawai','id'));
+        return view('pegawai.penilai.catatan_penting', compact('catatan_penting', 'hash', 'pegawai', 'id'));
     }
 
-    public function update_penilaian_catatan_penting(Request $request,$id)
+    public function update_penilaian_catatan_penting(Request $request, $id)
     {
         $hash = new Hashids();
         $id_penilaian = $hash->decode($id);

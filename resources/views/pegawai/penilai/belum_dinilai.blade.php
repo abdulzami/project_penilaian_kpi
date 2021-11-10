@@ -35,6 +35,9 @@
                                     <th>NPK</th>
                                     <th>Nama Pegawai</th>
                                     <th>Jabatan</th>
+                                    <th>Total</th>
+                                    {{-- <th>Kinerja</th> --}}
+                                    <th style="width: 100px">Capaian</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -45,6 +48,9 @@
                                         <td>{{$dinilai->npk}}</td>
                                         <td>{{ $dinilai->nama }}</td>
                                         <td>{{ $dinilai->nama_jabatan }} {{$dinilai->nama_struktural}} {{$dinilai->nama_bidang}}</td>
+                                        <td>{{ $dinilai->total }}</td>
+                                        {{-- <td></td> --}}
+                                        <td>{{$dinilai->capaian}}</td>
                                         <td>
                                             <a class="btn btn-xs btn-info mb-1" href="{{route('belum-dinilai-kpi-performance',$hash->encode($dinilai->id_penilaian))}}">KPI Performance</a>
                                             <a class="btn btn-xs btn-warning mb-1" href="{{route('belum-dinilai-kpi-perilaku',$hash->encode($dinilai->id_penilaian))}}">KPI Perilaku</a>

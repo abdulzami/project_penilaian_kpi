@@ -19,13 +19,9 @@ class BidangController extends Controller
         $hash = new Hashids();
         $id_struktural = $hash->decode($id);
         $strukturals = Struktural::find($id_struktural);
-        if ($strukturals->isEmpty()) {
-            abort(404);
-        } else {
-            $bidangs = Struktural::find($id_struktural[0])->bidangs;
-            $nama_struktural = $strukturals[0]->nama_struktural;
-            return view('admin.data_bidang', compact('bidangs', 'hash', 'id', 'nama_struktural'));
-        }
+        $bidangs = Struktural::find($id_struktural[0])->bidangs;
+        $nama_struktural = $strukturals[0]->nama_struktural;
+        return view('admin.data_bidang', compact('bidangs', 'hash', 'id', 'nama_struktural'));
     }
 
     /**
@@ -38,12 +34,8 @@ class BidangController extends Controller
         $hash = new Hashids();
         $id_struktural = $hash->decode($id);
         $strukturals = Struktural::find($id_struktural);
-        if ($strukturals->isEmpty()) {
-            abort(404);
-        } else {
-            $nama_struktural = $strukturals[0]->nama_struktural;
-            return view('admin.tambah_bidang', compact('nama_struktural', 'id'));
-        }
+        $nama_struktural = $strukturals[0]->nama_struktural;
+        return view('admin.tambah_bidang', compact('nama_struktural', 'id'));
     }
 
     /**
@@ -57,24 +49,19 @@ class BidangController extends Controller
         $hash = new Hashids();
         $id_struktural = $hash->decode($id);
         $strukturals = Struktural::find($id_struktural);
-        if ($strukturals->isEmpty()) {
-            abort(404);
-        } else {
-            request()->validate(
-                [
-                    'nama_bidang' => 'required|max:50|min:4',
-                ]
-            );
-
-            try {
-                $bidang = new Bidang();
-                $bidang->nama_bidang = $request->nama_bidang;
-                $strukturals[0]->bidangs()->save($bidang);
-            } catch (\Illuminate\Database\QueryException $ex) {
-                return back()->with('gagal', 'Gagal menambahkan bidang');
-            }
-            return back()->with('success', 'Sukses menambahkan bidang');
+        request()->validate(
+            [
+                'nama_bidang' => 'required|max:50|min:4',
+            ]
+        );
+        try {
+            $bidang = new Bidang();
+            $bidang->nama_bidang = $request->nama_bidang;
+            $strukturals[0]->bidangs()->save($bidang);
+        } catch (\Illuminate\Database\QueryException $ex) {
+            return back()->with('gagal', 'Gagal menambahkan bidang');
         }
+        return back()->with('success', 'Sukses menambahkan bidang');
     }
 
     /**
@@ -94,7 +81,7 @@ class BidangController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id,$id2)
+    public function edit($id, $id2)
     {
         $hash = new Hashids();
         $id_struktural = $hash->decode($id);
@@ -102,11 +89,7 @@ class BidangController extends Controller
         $bidangs = Struktural::find($id_struktural[0])->bidangs()->find($id_bidang);
         $strukturals = Struktural::find($id_struktural);
         $nama_struktural = $strukturals[0]->nama_struktural;
-        if ($bidangs->isEmpty()) {
-            abort(404);
-        } else {
-            return view('admin.edit_bidang', compact('bidangs','nama_struktural', 'id','id2'));
-        }
+        return view('admin.edit_bidang', compact('bidangs', 'nama_struktural', 'id', 'id2'));
     }
 
     /**
@@ -116,29 +99,25 @@ class BidangController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id,$id2)
+    public function update(Request $request, $id, $id2)
     {
         $hash = new Hashids();
         $id_struktural = $hash->decode($id);
         $id_bidang = $hash->decode($id2);
         $bidangs = Struktural::find($id_struktural[0])->bidangs()->find($id_bidang);
-        if ($bidangs->isEmpty()) {
-            abort(404);
-        } else {
-            request()->validate(
-                [
-                    'nama_bidang' => 'required|max:20|min:4',
-                ]
-            );
-            try {
-                $bidangs->first()->update([
-                    'nama_bidang' => $request->nama_bidang
-                ]);
-            } catch (\Illuminate\Database\QueryException $ex) {
-                return back()->with('gagal', 'Gagal mengubah bidang');
-            }
-            return back()->with('success', 'Sukses mengubah bidang');
+        request()->validate(
+            [
+                'nama_bidang' => 'required|max:20|min:4',
+            ]
+        );
+        try {
+            $bidangs->first()->update([
+                'nama_bidang' => $request->nama_bidang
+            ]);
+        } catch (\Illuminate\Database\QueryException $ex) {
+            return back()->with('gagal', 'Gagal mengubah bidang');
         }
+        return back()->with('success', 'Sukses mengubah bidang');
     }
 
     /**
@@ -147,21 +126,17 @@ class BidangController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id,$id2)
+    public function destroy($id, $id2)
     {
         $hash = new Hashids();
         $id_struktural = $hash->decode($id);
         $id_bidang = $hash->decode($id2);
         $bidangs = Struktural::find($id_struktural[0])->bidangs()->find($id_bidang);
-        if ($bidangs->isEmpty()) {
-            abort(404);
-        } else {
-            try {
-                $bidangs->first()->delete();
-            } catch (\Illuminate\Database\QueryException $ex) {
-                return back()->with('gagal', 'Gagal menghapus bidang');
-            }
-            return back()->with('success', 'Sukses menghapus bidang');
+        try {
+            $bidangs->first()->delete();
+        } catch (\Illuminate\Database\QueryException $ex) {
+            return back()->with('gagal', 'Gagal menghapus bidang');
         }
+        return back()->with('success', 'Sukses menghapus bidang');
     }
 }

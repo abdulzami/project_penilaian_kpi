@@ -16,7 +16,7 @@ class StrukturalController extends Controller
     public function index()
     {
         $hash = new Hashids();
-        $strukturals = Struktural::get();   
+        $strukturals = Struktural::get();
         return view('admin.data_struktural', compact('strukturals', 'hash'));
     }
 
@@ -76,11 +76,7 @@ class StrukturalController extends Controller
         $hash = new Hashids();
         $id_struktural = $hash->decode($id);
         $strukturals = Struktural::find($id_struktural);
-        if ($strukturals->isEmpty()) {
-            abort(404);
-        } else {
-            return view('admin.edit_struktural', compact('strukturals', 'id'));
-        }
+        return view('admin.edit_struktural', compact('strukturals', 'id'));
     }
 
     /**
@@ -94,25 +90,20 @@ class StrukturalController extends Controller
     {
         $hash = new Hashids();
         $id_struktural = $hash->decode($id);
-        $strukturals = Struktural::find($id_struktural);
-        if ($strukturals->isEmpty()) {
-            abort(404);
-        } else {
-            request()->validate(
-                [
-                    'nama_struktural' => 'required|max:20|min:4',
-                ]
-            );
+        request()->validate(
+            [
+                'nama_struktural' => 'required|max:20|min:4',
+            ]
+        );
 
-            try {
-                Struktural::where('id_struktural',$id_struktural)->update([
-                    'nama_struktural' => $request->nama_struktural
-                ]);
-            } catch (\Illuminate\Database\QueryException $ex) {
-                return back()->with('gagal', 'Gagal mengubah struktural');
-            }
-            return back()->with('success', 'Sukses mengubah struktural');
+        try {
+            Struktural::where('id_struktural', $id_struktural)->update([
+                'nama_struktural' => $request->nama_struktural
+            ]);
+        } catch (\Illuminate\Database\QueryException $ex) {
+            return back()->with('gagal', 'Gagal mengubah struktural');
         }
+        return back()->with('success', 'Sukses mengubah struktural');
     }
 
     /**
@@ -125,16 +116,11 @@ class StrukturalController extends Controller
     {
         $hash = new Hashids();
         $id_struktural = $hash->decode($id);
-        $strukturals = Struktural::find($id_struktural);
-        if ($strukturals->isEmpty()) {
-            abort(404);
-        } else {
-            try {
-                Struktural::where('id_struktural',$id_struktural)->first()->delete();
-            } catch (\Illuminate\Database\QueryException $ex) {
-                return back()->with('gagal', 'Gagal menghapus struktural');
-            }
-            return back()->with('success', 'Sukses menghapus struktural');
+        try {
+            Struktural::where('id_struktural', $id_struktural)->first()->delete();
+        } catch (\Illuminate\Database\QueryException $ex) {
+            return back()->with('gagal', 'Gagal menghapus struktural');
         }
+        return back()->with('success', 'Sukses menghapus struktural');
     }
 }
