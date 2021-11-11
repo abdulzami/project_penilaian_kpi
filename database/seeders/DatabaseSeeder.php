@@ -79,6 +79,15 @@ class DatabaseSeeder extends Seeder
                 "status_user"=> "aktif",
                 "level"=> "pegawai",
                 "id_jabatan"=> 3,
+            ],
+            [
+                "npk"=> "000004",
+                "nama"=> "Orang ke 4",
+                "email"=> "orang4@gmail.com",
+                'password' => bcrypt('pegawaibarata'),
+                "status_user"=> "aktif",
+                "level"=> "pegawai",
+                "id_jabatan"=> 4,
             ]
         ];
         foreach ($stuktural as $key => $value) {

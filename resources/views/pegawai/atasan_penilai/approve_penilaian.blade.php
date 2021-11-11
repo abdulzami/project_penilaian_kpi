@@ -9,12 +9,12 @@
     <div class="row page-titles mx-0">
         <div class="col-sm-6 p-md-0">
             <div class="welcome-text">
-                <h4>Penilaian</h4>
+                <h4>Approve Penilaian</h4>
             </div>
         </div>
         <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active">Penilaian Belum Dinilai</li>
+                <li class="breadcrumb-item active">Penilaian Yang Membutuhkan Verifikasi</li>
             </ol>
         </div>
     </div>
@@ -24,7 +24,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Daftar Belum Dinilai</h4>
+                    <h4 class="card-title">Daftar Membutuhkan Verifikasi</h4>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -38,12 +38,13 @@
                                     <th>Total</th>
                                     {{-- <th>Kinerja</th> --}}
                                     <th style="width: 100px">Capaian</th>
+                                    <th>Catatan Penting</th>
                                     <th>Keterangan</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($dinilais as $index => $dinilai)
+                                @foreach ($penilaians as $index => $dinilai)
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ $dinilai->npk }}</td>
@@ -53,6 +54,14 @@
                                         <td>{{ $dinilai->total }}</td>
                                         {{-- <td></td> --}}
                                         <td>{{ $dinilai->capaian }}</td>
+                                        <td>
+                                            @if ($dinilai->catata_penting == null)
+                                                <div class="badge badge-md badge-info">Tidak ada catatan penting</div>
+                                            @else
+                                                {{ $dinilai->catatan_penting }}
+                                            @endif
+
+                                        </td>
                                         <td>
                                             @if ($dinilai->performance != 0)
                                                 <div class="badge badge-xs badge-primary">KPI Performance <i
@@ -79,48 +88,9 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <a class="btn btn-xs btn-info mb-1"
-                                                href="{{ route('belum-dinilai-kpi-performance', $hash->encode($dinilai->id_penilaian)) }}">KPI
-                                                Performance</a>
-                                            <a class="btn btn-xs btn-warning mb-1"
-                                                href="{{ route('belum-dinilai-kpi-perilaku', $hash->encode($dinilai->id_penilaian)) }}">KPI
-                                                Perilaku</a>
-                                            <a class="btn btn-xs btn-dark mb-1"
-                                                href="{{ route('belum-dinilai-catatan-penting', $hash->encode($dinilai->id_penilaian)) }}">Catatan
-                                                Penting</a>
-                                            @if ($dinilai->perilaku != 0 && $dinilai->performance != 0)
-                                                <a href="#" class="btn btn-xs btn-secondary mb-1 swall-yeah"
-                                                    data-id="{{ $hash->encode($dinilai->id_penilaian) }}">
-                                                    <form
-                                                        action="{{ route('belum-dinilai-approve', $hash->encode($dinilai->id_penilaian)) }}"
-                                                        id="approve{{ $hash->encode($dinilai->id_penilaian) }}"
-                                                        method="post">
-                                                        @csrf
-                                                        @method('put')
-                                                    </form>
-                                                    Approve
-                                                </a>
-                                            @endif
-
-                                        </td>
-                                        {{-- <td>
-
-                                            <a class="btn btn-xs btn-info mb-1"
-                                                href="{{ route('edit-struktural', $hash->encode($struktural->id_struktural)) }}">Edit</a>
-                                            <a href="#" class="btn btn-xs btn-danger mb-1 swall-yeah"
-                                                data-id="{{ $hash->encode($struktural->id_struktural) }}">
-                                                <form
-                                                    action="{{ route('delete-struktural', $hash->encode($struktural->id_struktural)) }}"
-                                                    id="delete{{ $hash->encode($struktural->id_struktural) }}"
-                                                    method="post">
-                                                    @method('delete')
-                                                    @csrf
-                                                </form>
-                                                Delete
-                                            </a>
                                             <a class="btn btn-xs btn-secondary mb-1"
-                                                href="{{ route('bidang', $hash->encode($struktural->id_struktural)) }}">Bidang</a>
-                                        </td> --}}
+                                                href="#">Preview</a>
+                                        </td>
                                     </tr>
                                 @endforeach
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApprovePenilaianController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BidangController;
@@ -9,7 +10,8 @@ use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\KpiperformanceController;
 use App\Http\Controllers\KpiperilakuController;
 use App\Http\Controllers\PegawaiController;
-use App\Http\Controllers\PenilaianPenilaiController;
+use App\Http\Controllers\PenilaianPenilaiBelumDinilaiController;
+use App\Http\Controllers\PenilaianPenilaiMenungguVerifikasi;
 use App\Http\Controllers\PenilaiController;
 use Illuminate\Support\Facades\Route;
 
@@ -103,25 +105,31 @@ Route::group(['middleware' => ['auth']], function () {
 
     });
     Route::group(['middleware' => ['cek_login:pegawai', 'cek_atasanpenilai:ya']], function () {
-        Route::get('/greeting3', function () {
-            return 'Hello World test';
-        });
+        Route::get('/approve-penilaian', [ApprovePenilaianController::class, 'show_approve_penilaian'])->name('approve-penilaian');
     });
 
     Route::group(['middleware' => ['cek_login:pegawai', 'cek_penilai:ya']], function () {
         Route::group(['middleware' => ['cek_berlangsung:ya']], function () {
-            Route::get('/belum-dinilai', [PenilaianPenilaiController::class, 'show_belum_dinilai'])->name('belum-dinilai');
+            //start belum dinilai
+            Route::get('/belum-dinilai', [PenilaianPenilaiBelumDinilaiController::class, 'show_belum_dinilai'])->name('belum-dinilai');
             
-            Route::get('/belum-dinilai/{id}/kpi-performance', [PenilaianPenilaiController::class, 'create_penilaian_kpi_performance'])->name('belum-dinilai-kpi-performance');
-            Route::post('/belum-dinilai/{id}/kpi-performance/store', [PenilaianPenilaiController::class, 'store_penilaian_kpi_performance'])->name('belum-dinilai-kpi-performance-store');
-            Route::put('/belum-dinilai/{id}/kpi-performance/update', [PenilaianPenilaiController::class, 'update_penilaian_kpi_performance'])->name('belum-dinilai-kpi-performance-update');
+            Route::get('/belum-dinilai/{id}/kpi-performance', [PenilaianPenilaiBelumDinilaiController::class, 'create_penilaian_kpi_performance'])->name('belum-dinilai-kpi-performance');
+            Route::post('/belum-dinilai/{id}/kpi-performance/store', [PenilaianPenilaiBelumDinilaiController::class, 'store_penilaian_kpi_performance'])->name('belum-dinilai-kpi-performance-store');
+            Route::put('/belum-dinilai/{id}/kpi-performance/update', [PenilaianPenilaiBelumDinilaiController::class, 'update_penilaian_kpi_performance'])->name('belum-dinilai-kpi-performance-update');
             
-            Route::get('/belum-dinilai/{id}/kpi-perilaku', [PenilaianPenilaiController::class, 'create_penilaian_kpi_perilaku'])->name('belum-dinilai-kpi-perilaku');
-            Route::post('/belum-dinilai/{id}/kpi-perilaku/store', [PenilaianPenilaiController::class, 'store_penilaian_kpi_perilaku'])->name('belum-dinilai-kpi-perilaku-store');
-            Route::put('/belum-dinilai/{id}/kpi-perilaku/update', [PenilaianPenilaiController::class, 'update_penilaian_kpi_perilaku'])->name('belum-dinilai-kpi-perilaku-update');
+            Route::get('/belum-dinilai/{id}/kpi-perilaku', [PenilaianPenilaiBelumDinilaiController::class, 'create_penilaian_kpi_perilaku'])->name('belum-dinilai-kpi-perilaku');
+            Route::post('/belum-dinilai/{id}/kpi-perilaku/store', [PenilaianPenilaiBelumDinilaiController::class, 'store_penilaian_kpi_perilaku'])->name('belum-dinilai-kpi-perilaku-store');
+            Route::put('/belum-dinilai/{id}/kpi-perilaku/update', [PenilaianPenilaiBelumDinilaiController::class, 'update_penilaian_kpi_perilaku'])->name('belum-dinilai-kpi-perilaku-update');
 
-            Route::get('/belum-dinilai/{id}/catatan-penting', [PenilaianPenilaiController::class, 'penilaian_catatan_penting'])->name('belum-dinilai-catatan-penting');
-            Route::put('/belum-dinilai/{id}/catatan-penting/update', [PenilaianPenilaiController::class, 'update_penilaian_catatan_penting'])->name('belum-dinilai-catatan-penting-update');
+            Route::get('/belum-dinilai/{id}/catatan-penting', [PenilaianPenilaiBelumDinilaiController::class, 'penilaian_catatan_penting'])->name('belum-dinilai-catatan-penting');
+            Route::put('/belum-dinilai/{id}/catatan-penting/update', [PenilaianPenilaiBelumDinilaiController::class, 'update_penilaian_catatan_penting'])->name('belum-dinilai-catatan-penting-update');
+
+            Route::put('/belum-dinilai/{id}/approve', [PenilaianPenilaiBelumDinilaiController::class, 'approve_to_menunggu_verifikasi'])->name('belum-dinilai-approve');
+            //end belum dinilai
+
+            //start menunggu verifikasi
+            Route::get('/menunggu-verifikasi', [PenilaianPenilaiMenungguVerifikasi::class, 'show_menunggu_verifikasi'])->name('menunggu-verifikasi');
+            //end menunggu verifikasi
         });
     });
 

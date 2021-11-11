@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PHPUnit\TextUI\XmlConfiguration\Group;
 
-class PenilaianPenilaiController extends Controller
+class PenilaianPenilaiBelumDinilaiController extends Controller
 {
     public function show_belum_dinilai()
     {
@@ -27,7 +27,7 @@ class PenilaianPenilaiController extends Controller
         $sekarang = Carbon::now();
         $sekarang = $sekarang->toDateString();
         $jadwal = Jadwal::select('id_jadwal')->whereRaw('? between tanggal_mulai and tanggal_akhir', $sekarang)->first();
-        $dinilais = Jabatan::select('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian')
+        $dinilais = Jabatan::select('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
             ->join('users', 'jabatans.id_jabatan', '=', 'users.id_jabatan')
             ->join('bidangs', 'jabatans.id_bidang', '=', 'bidangs.id_bidang')
             ->join('strukturals', 'bidangs.id_struktural', 'strukturals.id_struktural')
@@ -35,7 +35,7 @@ class PenilaianPenilaiController extends Controller
             ->where('jabatans.id_penilai', $user->id_jabatan)
             ->where('penilaians.status_penilaian', 'belum_dinilai')
             ->where('penilaians.id_jadwal', $jadwal->id_jadwal)
-            ->groupBy('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.id_jadwal', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian')
+            ->groupBy('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.id_jadwal', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
             ->get();
         for ($i = 0; $i < sizeof($dinilais); $i++) {
             $performances = PenilaianPerformance::select(DB::raw("CASE
@@ -226,5 +226,43 @@ class PenilaianPenilaiController extends Controller
             return back()->with('gagal', 'Gagal ubah catatan penting');
         }
         return back()->with('success', 'Sukses ubah catatan penting');
+    }
+
+    public function approve_to_menunggu_verifikasi($id)
+    {
+        $hash = new Hashids();
+        $id_penilaian = $hash->decode($id);
+        $penilaian = Penilaian::find($id_penilaian);
+        for ($i = 0; $i < sizeof($penilaian); $i++) {
+            $performances = PenilaianPerformance::select(DB::raw("CASE
+                WHEN tipe_performance = 'min' AND target>realisasi THEN 100
+                WHEN tipe_performance = 'min' THEN ((target/realisasi)*100)*bobot/100
+                WHEN tipe_performance = 'max' THEN ((realisasi/target) * 100)*bobot/100
+                END AS skor"))
+                ->join('kpi_performances', 'kpi_performances.id_performance', '=', 'penilaian_performances.id_performance')
+                ->where('id_penilaian', $penilaian[$i]->id_penilaian)->get();
+            $performances = $performances->sum('skor');
+            $performances = $performances * 70 / 100;
+            $perilakus = PenilaianPerilaku::select(DB::raw('SUM(nilai_perilaku *20 * 100/6/100)*30/100 AS skor_akhir'))->where('id_penilaian', $penilaian[$i]->id_penilaian)->get();
+            $perilakus = (float)$perilakus[0]->skor_akhir;
+            $total = round(($performances + $perilakus), 5);
+            $penilaian[$i]->performance = $performances;
+            $penilaian[$i]->perilaku = $perilakus;
+            $penilaian[$i]->total = $total;
+            $penilaian[$i]->capaian = $total . " %";
+        }
+        $penilaian = $penilaian[0];
+        if ($penilaian->perilaku != 0 && $penilaian->performance != 0) {
+            try {
+                Penilaian::where('id_penilaian', $id_penilaian)->update([
+                    'status_penilaian' => 'menunggu_verifikasi'
+                ]);
+            } catch (\Illuminate\Database\QueryException $ex) {
+                return back()->with('gagal', 'Gagal aprrove penilaian');
+            }
+            return back()->with('success', 'Sukses aprrove penilaian');
+        }else{
+            return back()->with('gagal', 'Gagal aprrove penilaian');
+        }
     }
 }
