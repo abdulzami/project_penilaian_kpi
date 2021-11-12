@@ -55,7 +55,7 @@
                                         {{-- <td></td> --}}
                                         <td>{{ $dinilai->capaian }}</td>
                                         <td>
-                                            @if ($dinilai->catata_penting == null)
+                                            @if ($dinilai->catatan_penting == null)
                                                 <div class="badge badge-md badge-info">Tidak ada catatan penting</div>
                                             @else
                                                 {{ $dinilai->catatan_penting }}
@@ -88,8 +88,23 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <a class="btn btn-xs btn-secondary mb-1"
-                                                href="#">Preview</a>
+                                            @if ($dinilai->catatan_penting == null)
+                                            <a href="#" class="btn btn-xs btn-secondary mb-1 swall-yeah"
+                                                    data-id="{{ $hash->encode($dinilai->id_penilaian) }}">
+                                                    <form
+                                                        action="{{route('approve-penilaian-approve-langsung',$hash->encode($dinilai->id_penilaian))}}"
+                                                        id="approve{{ $hash->encode($dinilai->id_penilaian) }}"
+                                                        method="post">
+                                                        @csrf
+                                                        @method('put')
+                                                    </form>
+                                                    Approve
+                                                </a>
+                                            @else
+                                            <a class="btn btn-xs btn-dark mb-1"
+                                            href="{{route('approve-penilaian-review',$hash->encode($dinilai->id_penilaian))}}">Review</a>
+                                            @endif
+                                            
                                         </td>
                                     </tr>
                                 @endforeach

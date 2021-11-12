@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Jabatan;
 use App\Models\Jadwal;
+use App\Models\Penilaian;
 use App\Models\PenilaianPerformance;
 use App\Models\PenilaianPerilaku;
+use App\Models\User;
 use Carbon\Carbon;
 use Hashids\Hashids;
 use Illuminate\Http\Request;
@@ -56,31 +58,91 @@ class ApprovePenilaianController extends Controller
         $penilaians = array();
         $user = Auth::user();
         $cek = Jabatan::find($user->id_jabatan);
-        if($cek->id_penilai == null)
-        {
-            $diapproves = Jabatan::where('id_penilai',$user->id_jabatan)->get();
-            foreach($diapproves as $diapprove){
-                array_push($jabatanapasaja,$diapprove->id_jabatan);
+        if ($cek->id_penilai == null) {
+            $diapproves = Jabatan::where('id_penilai', $user->id_jabatan)->get();
+            foreach ($diapproves as $diapprove) {
+                array_push($jabatanapasaja, $diapprove->id_jabatan);
             }
-        }
-        
-        $dinilais = Jabatan::where('id_penilai',$user->id_jabatan)->get();
-        foreach($dinilais as $dinilai){
-            $jabatans = Jabatan::where('id_penilai',$dinilai->id_jabatan)->get();
-            array_push($jabatanapasaja,$jabatans[0]->id_jabatan);
         }
 
-        foreach($jabatanapasaja as $id_jabatan)
-        {
+        $dinilais = Jabatan::where('id_penilai', $user->id_jabatan)->get();
+        foreach ($dinilais as $dinilai) {
+            $jabatans = Jabatan::where('id_penilai', $dinilai->id_jabatan)->get();
+            array_push($jabatanapasaja, $jabatans[0]->id_jabatan);
+        }
+
+        foreach ($jabatanapasaja as $id_jabatan) {
             $penilaian_need_approve = $this->get_need_approve($id_jabatan);
-            if($penilaian_need_approve->isEmpty()){
-                
-            }else{
-                array_push($penilaians,$penilaian_need_approve[0]);
+            if ($penilaian_need_approve->isEmpty()) {
+            } else {
+                array_push($penilaians, $penilaian_need_approve[0]);
             }
-            
         }
 
         return view('pegawai.atasan_penilai.approve_penilaian', compact('penilaians', 'hash'));
+    }
+
+    public function review_penilaian($id)
+    {
+        $hash = new Hashids();
+        $id_penilaian = $hash->decode($id);
+        $penilaian = Penilaian::select('id_penilaian','id_pegawai', 'catatan_penting')->find($id_penilaian);
+        for ($i = 0; $i < sizeof($penilaian); $i++) {
+            $performances = PenilaianPerformance::select(DB::raw("CASE
+                WHEN tipe_performance = 'min' AND target>realisasi THEN 100
+                WHEN tipe_performance = 'min' THEN ((target/realisasi)*100)*bobot/100
+                WHEN tipe_performance = 'max' THEN ((realisasi/target) * 100)*bobot/100
+                END AS skor"))
+                ->join('kpi_performances', 'kpi_performances.id_performance', '=', 'penilaian_performances.id_performance')
+                ->where('id_penilaian', $penilaian[$i]->id_penilaian)->get();
+            $performances = $performances->sum('skor');
+            $performances = $performances * 70 / 100;
+            $perilakus = PenilaianPerilaku::select(DB::raw('SUM(nilai_perilaku *20 * 100/6/100)*30/100 AS skor_akhir'))->where('id_penilaian', $penilaian[$i]->id_penilaian)->get();
+            $perilakus = (float)$perilakus[0]->skor_akhir;
+            $total = round(($performances + $perilakus), 5);
+            $penilaian[$i]->performance = $performances;
+            $penilaian[$i]->perilaku = $perilakus;
+            $penilaian[$i]->total = $total;
+            $penilaian[$i]->capaian = $total . " %";
+        }
+        $id_pegawai = $penilaian[0]->id_pegawai;
+        $pegawai = User::find($id_pegawai);
+        $catatan_penting = $penilaian[0]->catatan_penting;
+        $total = $penilaian[0]->total;
+        return view('pegawai.atasan_penilai.review_penilaian', compact('catatan_penting', 'hash','total', 'pegawai', 'id'));
+    }
+
+    public function approve_penilaian(Request $request,$id)
+    {
+        $hash = new Hashids();
+        $id_penilaian = $hash->decode($id);
+        request()->validate(
+            [
+                'pengurangan_nilai' => 'required|numeric|max:100|min:1',
+            ]
+        );
+        try {
+            Penilaian::where('id_penilaian', $id_penilaian)->update([
+                'pengurangan' => $request->pengurangan_nilai,
+                'status_penilaian' => 'terverifikasi'
+            ]);
+        } catch (\Illuminate\Database\QueryException $ex) {
+            return back()->with('gagal', 'Gagal aprrove penilaian');
+        }
+        return redirect('approve-penilaian')->with('success', 'Sukses approve penilaian');
+    }
+
+    public function approve_penilaian_langsung($id)
+    {
+        $hash = new Hashids();
+        $id_penilaian = $hash->decode($id);
+        try {
+            Penilaian::where('id_penilaian', $id_penilaian)->update([
+                'status_penilaian' => 'terverifikasi'
+            ]);
+        } catch (\Illuminate\Database\QueryException $ex) {
+            return back()->with('gagal', 'Gagal aprrove penilaian');
+        }
+        return redirect('approve-penilaian')->with('success', 'Sukses approve penilaian');
     }
 }

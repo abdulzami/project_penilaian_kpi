@@ -69,5 +69,8 @@ class Kernel extends HttpKernel
         'cek_dinilai' => \App\Http\Middleware\Cek_dinilai::class,
         'cek_berlangsung' => \App\Http\Middleware\Cek_berlangsung::class,
         'cek_berlangsungno' => \App\Http\Middleware\Cek_berlangsungno::class,
+        'cek_menunggu_verifikasi' => \App\Http\Middleware\Cek_menunggu_verifikasi::class,
+        'cek_belum_dinilai' => \App\Http\Middleware\Cek_belum_dinilai::class,
+        'cek_catatan_penting' => \App\Http\Middleware\Cek_catatan_penting::class,
     ];
 }

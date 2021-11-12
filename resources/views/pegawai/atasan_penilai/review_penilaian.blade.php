@@ -7,13 +7,13 @@
     <div class="row page-titles mx-0">
         <div class="col-sm-6 p-md-0">
             <div class="welcome-text">
-                <h4>Penilaian Catatan Penting</h4>
+                <h4>Review Penilaian</h4>
             </div>
         </div>
         <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('belum-dinilai') }}">Penilaian Belum Dinilai</a></li>
-                <li class="breadcrumb-item active">Catatan Penting - {{ $pegawai->npk }} - {{ $pegawai->nama }}</li>
+                <li class="breadcrumb-item"><a href="{{ route('approve-penilaian') }}">Approve Penilaian</a></li>
+                <li class="breadcrumb-item active">{{ $pegawai->npk }} - {{ $pegawai->nama }}</li>
             </ol>
         </div>
     </div>
@@ -21,18 +21,40 @@
 @section('content')
     <div class="card col-xl-12">
         <div class="card-header">
-            <h4 class="card-title">Form Catatan Penting</h4>
+            <h4 class="card-title">Form Review Penilaian</h4>
         </div>
         <div class="card-body">
             <div class="basic-form">
-                <form action="{{route('belum-dinilai-catatan-penting-update',$id)}}" method="post">
+                <div class="form-group">
+                    <label>Catatan Penting</label>
+                    <div class="card border col-xl-12">
+                        <div class="card-body">
+                            {{ $catatan_penting }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Total Nilai Awal</label>
+                    <div class="card border col-xl-12">
+                        <div class="card-body">
+                            {{ $total }}
+                        </div>
+                    </div>
+                </div>
+                <form action="{{route('approve-penilaian-approve',$id)}}" method="post">
                     @csrf
                     @method('put')
                     <div class="form-group">
-                        <label>Catatan Penting</label>
-                        <textarea  class="form-control" name="catatan_penting" cols="30" rows="10">{{$catatan_penting}}</textarea>
+                        <label>Pengurangan Nilai</label>
+                        <div class="input-group">
+                            <input type="number" name="pengurangan_nilai" placeholder="Masukkan Pengurangan Nilai"
+                                class="form-control">
+                            <div class="input-group-append">
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-sm btn-primary mt-3">Simpan</button>
+                    <button type="submit" class="btn btn-sm btn-primary mt-3" cl>Approve</button>
                 </form>
             </div>
         </div>
