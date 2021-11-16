@@ -28,7 +28,7 @@
             </div>
         </div>
         @dinilai
-        @if ($penilaian->status_penilaian != 'terverifikasi')
+        @if ($penilaian->status_penilaian != 'terverifikasi' && $penilaian->status_penilaian != 'selesai')
             <div class="col-xl-12">
                 <div class="card text-white bg-info">
                     <div class="card-body mb-0">
@@ -37,12 +37,24 @@
                 </div>
             </div>
         @endif
-        @if ($penilaian->status_penilaian == 'terverifikasi')
+        @if ($penilaian->status_penilaian == 'terverifikasi' || $penilaian->status_penilaian == 'selesai')
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-header border-0 pb-0">
                         <h5 class="card-title">Hasil Penilaian KPI Performance Anda </h5>
-                        <a href="#"><button type="button" class="btn btn-xs mb-3 btn-primary mb-1">Approve</button></a>
+                        @if ($penilaian->status_penilaian != 'selesai')
+                            <a href="#" class="btn btn-xs btn-primary mb-1 swall-yeah"
+                                data-id="{{ $hash->encode($penilaian->id_penilaian) }}">
+                                <form
+                                    action="{{ route('approve-penilaian-dinilai', $hash->encode($penilaian->id_penilaian)) }}"
+                                    id="approve{{ $hash->encode($penilaian->id_penilaian) }}" method="post">
+                                    @method('put')
+                                    @csrf
+                                </form>
+                                Approve
+                            </a>
+                        @endif
+
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -81,16 +93,16 @@
                 </div>
             </div>
             @if ($penilaian->catatan_penting != null)
-            <div class="col-xl-12">
-                <div class="card">
-                    <div class="card-header border-0 pb-0">
-                        <h5 class="card-title text-danger">Catatan Penting !!</h5>
-                    </div>
-                    <div class="card-body">
-                        {{ $penilaian->catatan_penting }}
+                <div class="col-xl-12">
+                    <div class="card">
+                        <div class="card-header border-0 pb-0">
+                            <h5 class="card-title text-danger">Catatan Penting !!</h5>
+                        </div>
+                        <div class="card-body">
+                            {{ $penilaian->catatan_penting }}
+                        </div>
                     </div>
                 </div>
-            </div>
             @endif
             <div class="col-xl-12">
                 <div class="card">
@@ -111,20 +123,40 @@
 
                 </div>
             </div>
-            <div class="col-xl-12">
-                <div class="card">
-                    <div class="card-header border-0 pb-0">
-                        <h5 class="card-title">Banding Penilaian</h5>
-                    </div>
-                    <div class="card-body">
-                        Status banding : <span class="badge badge-light">Belum Diajukan</span>
-                    </div>
-                    <div class="card-footer border-0 pt-0">
-                        <center><button type="submit" class="btn btn-xs btn-primary mt-3">Ajukan banding nilai</button>
-                        </center>
+            @if ($penilaian->status_penilaian != 'selesai')
+                <div class="col-xl-12">
+                    <div class="card">
+                        <div class="card-header border-0 pb-0">
+                            <h5 class="card-title">Banding Penilaian</h5>
+                        </div>
+                        <div class="card-body">
+                            Status banding : 
+                                @if ($penilaian->status_banding == null)
+                                <span class="badge badge-light">Belum diajukan</span>
+                                @elseif($penilaian->status_banding == 'proses')
+                                <span class="badge badge-light">Info</span>
+                                @elseif($penilaian->status_banding == 'ditolak')
+                                <span class="badge badge-danger">Ditolak</span>
+                                @elseif($penilaian->status_banding == 'diterima')
+                                <span class="badge badge-primary">Diterima</span>
+                                @endif
+                        </div>
+                        <div class="card-footer border-0 pt-0">
+                            <center><button type="submit" class="btn btn-xs btn-primary mt-3">Ajukan banding nilai</button>
+                            </center>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endif
+            @if ($penilaian->status_penilaian == 'selesai')
+                <div class="col-xl-12">
+                    <div class="card text-white bg-primary">
+                        <div class="card-body mb-0">
+                            <p class="card-text">Penilaian telah anda setujui.</p>
+                        </div>
+                    </div>
+                </div>
+            @endif
         @endif
         @enddinilai
     </div>
@@ -135,7 +167,7 @@
 @endsection
 @push('custom-script')
     <script src="{{ asset('assets/vendor/toastr/js/toastr.min.js') }}"></script>
-
+    <script src={{ asset('assets/vendor/sweetalert2/sweetalert2.all.js') }}></script>
     <!-- All init script -->
     <script src="{{ asset('assets/js/plugins-init/toastr-init.js') }}"></script>
     @if (session('gagal'))
@@ -189,4 +221,22 @@
             });
         </script>
     @endif
+    <script>
+        $(".swall-yeah").click(function(e) {
+            let id = e.target.dataset.id;
+            Swal.fire({
+                title: 'Apakah anda sudah yakin dengan penilaian ini ?',
+                text: "",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Approve !'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#approve' + id).submit();
+                }
+            })
+        })
+    </script>
 @endpush

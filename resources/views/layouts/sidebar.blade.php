@@ -49,7 +49,7 @@
                         <li><a href="{{ route('belum-dinilai') }}">Belum Dinilai</a></li>
                         <li><a href="{{ route('menunggu-verifikasi') }}">Menunggu Verifikasi</a></li>
                         <li><a href="#">Banding Penilaian</a></li>
-                        <li><a href="#">Selesai</a></li>
+                        <li><a href="{{ route('selesai') }}">Selesai</a></li>
                     </ul>
                 </li>
                 {{-- <li>

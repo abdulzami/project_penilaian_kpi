@@ -18,10 +18,10 @@
 @section('content')
     @penilaian_berlangsung
     <div class="row">
-        <div class="col-xl-6">
+        <div class="col-xl-12">
             <div class="card">
                 <div class="card-header border-0 pb-4">
-                    <h5 class="card-title">Penilaian <span class="badge badge-info">{{ $nama_periode }}</span>
+                    <h5 class="card-title">Penilaian {{ strtolower($nama_periode) }}
                         Sedang Berlangsung</h5>
                 </div>
             </div>

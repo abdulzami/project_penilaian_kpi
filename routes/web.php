@@ -12,7 +12,7 @@ use App\Http\Controllers\KpiperilakuController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\PenilaianPenilaiBelumDinilaiController;
 use App\Http\Controllers\PenilaianPenilaiMenungguVerifikasi;
-use App\Http\Controllers\PenilaiController;
+use App\Http\Controllers\PenilaianPenilaiSelesai;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -104,7 +104,7 @@ Route::group(['middleware' => ['auth']], function () {
         //end kpi perilaku
 
     });
-    Route::group(['middleware' => ['cek_login:pegawai', 'cek_atasanpenilai:ya']], function () {
+    Route::group(['middleware' => ['cek_login:pegawai', 'cek_atasanpenilai:ya','cek_berlangsung:ya']], function () {
         Route::get('/approve-penilaian', [ApprovePenilaianController::class, 'show_approve_penilaian'])->name('approve-penilaian');
         Route::get('/approve-penilaian/{id}/review', [ApprovePenilaianController::class, 'review_penilaian'])->name('approve-penilaian-review')->middleware(['cek_menunggu_verifikasi','cek_catatan_penting']);
         Route::put('/approve-penilaian/{id}/review/approve', [ApprovePenilaianController::class, 'approve_penilaian'])->name('approve-penilaian-approve')->middleware(['cek_menunggu_verifikasi','cek_catatan_penting']);
@@ -134,12 +134,12 @@ Route::group(['middleware' => ['auth']], function () {
             //start menunggu verifikasi
             Route::get('/menunggu-verifikasi', [PenilaianPenilaiMenungguVerifikasi::class, 'show_menunggu_verifikasi'])->name('menunggu-verifikasi');
             //end menunggu verifikasi
+
+            Route::get('/selesai', [PenilaianPenilaiSelesai::class, 'show_selesai'])->name('selesai');
         });
     });
 
     Route::group(['middleware' => ['cek_login:pegawai', 'cek_dinilai:ya']], function () {
-        Route::get('/greeting2', function () {
-            return 'Hello World2 test';
-        });
+        Route::put('/{id}/approve', [ApprovePenilaianController::class, 'approve_penilaian_dinilai'])->name('approve-penilaian-dinilai')->middleware('cek_terverifikasi');
     });
 });

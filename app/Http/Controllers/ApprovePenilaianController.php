@@ -86,7 +86,7 @@ class ApprovePenilaianController extends Controller
     {
         $hash = new Hashids();
         $id_penilaian = $hash->decode($id);
-        $penilaian = Penilaian::select('id_penilaian','id_pegawai', 'catatan_penting')->find($id_penilaian);
+        $penilaian = Penilaian::select('id_penilaian', 'id_pegawai', 'catatan_penting')->find($id_penilaian);
         for ($i = 0; $i < sizeof($penilaian); $i++) {
             $performances = PenilaianPerformance::select(DB::raw("CASE
                 WHEN tipe_performance = 'min' AND target>realisasi THEN 100
@@ -109,10 +109,10 @@ class ApprovePenilaianController extends Controller
         $pegawai = User::find($id_pegawai);
         $catatan_penting = $penilaian[0]->catatan_penting;
         $total = $penilaian[0]->total;
-        return view('pegawai.atasan_penilai.review_penilaian', compact('catatan_penting', 'hash','total', 'pegawai', 'id'));
+        return view('pegawai.atasan_penilai.review_penilaian', compact('catatan_penting', 'hash', 'total', 'pegawai', 'id'));
     }
 
-    public function approve_penilaian(Request $request,$id)
+    public function approve_penilaian(Request $request, $id)
     {
         $hash = new Hashids();
         $id_penilaian = $hash->decode($id);
@@ -144,5 +144,19 @@ class ApprovePenilaianController extends Controller
             return back()->with('gagal', 'Gagal aprrove penilaian');
         }
         return redirect('approve-penilaian')->with('success', 'Sukses approve penilaian');
+    }
+
+    public function approve_penilaian_dinilai($id)
+    {
+        $hash = new Hashids();
+        $id_penilaian = $hash->decode($id);
+        try {
+            Penilaian::where('id_penilaian', $id_penilaian)->update([
+                'status_penilaian' => 'selesai'
+            ]);
+        } catch (\Illuminate\Database\QueryException $ex) {
+            return back()->with('gagal', 'Gagal aprrove penilaian');
+        }
+        return redirect('home')->with('success', 'Sukses approve penilaian');
     }
 }
