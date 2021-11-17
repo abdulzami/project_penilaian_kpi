@@ -19,6 +19,7 @@ class CreateBandingsTable extends Migration
             $table->string('alasan',5000);
             $table->string('bukti');
             $table->enum('status_banding',['diterima','ditolak','proses']);
+            $table->string('agreement');
             $table->timestamps();
 
             $table->foreign('id_penilaian')->references('id_penilaian')->on('penilaians');

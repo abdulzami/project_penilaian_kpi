@@ -37,12 +37,21 @@
                 </div>
             </div>
         @endif
+        @if ($penilaian->status_banding == 'proses')
+            <div class="col-xl-12">
+                <div class="card text-white bg-info">
+                    <div class="card-body mb-0">
+                        <p class="card-text">Penilaian KPI anda sedang dalam proses banding.</p>
+                    </div>
+                </div>
+            </div>
+        @endif
         @if ($penilaian->status_penilaian == 'terverifikasi' || $penilaian->status_penilaian == 'selesai')
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-header border-0 pb-0">
                         <h5 class="card-title">Hasil Penilaian KPI Performance Anda </h5>
-                        @if ($penilaian->status_penilaian != 'selesai')
+                        @if ($penilaian->status_penilaian != 'selesai' && $penilaian->status_banding == null)
                             <a href="#" class="btn btn-xs btn-primary mb-1 swall-yeah"
                                 data-id="{{ $hash->encode($penilaian->id_penilaian) }}">
                                 <form
@@ -123,36 +132,61 @@
 
                 </div>
             </div>
-            @if ($penilaian->status_penilaian != 'selesai')
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-header border-0 pb-0">
-                            <h5 class="card-title">Banding Penilaian</h5>
-                        </div>
-                        <div class="card-body">
-                            Status banding : 
-                                @if ($penilaian->status_banding == null)
-                                <span class="badge light-light">Belum diajukan</span>
-                                @elseif($penilaian->status_banding == 'proses')
-                                <span class="badge light-light">Info</span>
-                                @elseif($penilaian->status_banding == 'ditolak')
-                                <span class="badge light-danger">Ditolak</span>
-                                @elseif($penilaian->status_banding == 'diterima')
-                                <span class="badge light-primary">Diterima</span>
-                                @endif
-                        </div>
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-header border-0 pb-0">
+                        <h5 class="card-title">Banding Penilaian</h5>
+                    </div>
+                    <div class="card-body">
+                        Status banding :
+                        @if ($penilaian->status_banding == null)
+                            <span class="badge light badge-dark">Belum diajukan</span>
+                        @elseif($penilaian->status_banding == 'proses')
+                            <span class="badge light badge-info">Sedang di proses</span>
+                        @elseif($penilaian->status_banding == 'ditolak')
+                            <span class="badge light badge-danger">Ditolak</span>
+                        @elseif($penilaian->status_banding == 'diterima')
+                            <span class="badge light badge-success">Disetujui</span>
+                        @endif
+                    </div>
+                    @if ($penilaian->status_banding == null && $penilaian->status_penilaian != 'selesai')
                         <div class="card-footer border-0 pt-0">
-                            <center><button type="submit" class="btn btn-xs btn-primary mt-3">Ajukan banding nilai</button>
+                            <center><a
+                                    href="{{ route('create-pengajuan-banding', $hash->encode($penilaian->id_penilaian)) }}"><button
+                                        type="submit" class="btn btn-xs btn-primary mt-3">Ajukan banding
+                                        nilai</button></a>
                             </center>
+                        </div>
+                    @endif
+                </div>
+            </div>
+            @if ($penilaian->status_penilaian == 'selesai' && $penilaian->status_banding == null)
+                <div class="col-xl-12">
+                    <div class="card text-white bg-success">
+                        <div class="card-body mb-0">
+                            <p class="card-text">Penilaian telah anda setujui. Penilaian selesai.</p>
                         </div>
                     </div>
                 </div>
             @endif
-            @if ($penilaian->status_penilaian == 'selesai')
+
+            @if ($penilaian->status_penilaian == 'selesai' && $penilaian->status_banding == 'diterima')
                 <div class="col-xl-12">
-                    <div class="card text-white bg-primary">
+                    <div class="card text-white bg-success">
                         <div class="card-body mb-0">
-                            <p class="card-text">Penilaian telah anda setujui.</p>
+                            <p class="card-text">Pengajuan banding telah disetujui dan penilaian sudah diubah.
+                                Penilaian selesai.</p>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            @if ($penilaian->status_penilaian == 'selesai' && $penilaian->status_banding == 'ditolak')
+                <div class="col-xl-12">
+                    <div class="card text-white bg-success">
+                        <div class="card-body mb-0">
+                            <p class="card-text">Pengajuan banding anda ditolak.
+                                Penilaian selesai.</p>
                         </div>
                     </div>
                 </div>
@@ -170,6 +204,28 @@
     <script src={{ asset('assets/vendor/sweetalert2/sweetalert2.all.js') }}></script>
     <!-- All init script -->
     <script src="{{ asset('assets/js/plugins-init/toastr-init.js') }}"></script>
+    @if (session('success'))
+        <script>
+            toastr.success('{{ session('success') }}', 'Sukses', {
+                positionClass: "toast-top-full-width",
+                timeOut: 5e3,
+                closeButton: !0,
+                debug: !1,
+                newestOnTop: !0,
+                progressBar: !0,
+                preventDuplicates: !0,
+                onclick: null,
+                showDuration: "300",
+                hideDuration: "1000",
+                extendedTimeOut: "1000",
+                showEasing: "swing",
+                hideEasing: "linear",
+                showMethod: "fadeIn",
+                hideMethod: "fadeOut",
+                tapToDismiss: !1
+            });
+        </script>
+    @endif
     @if (session('gagal'))
         <script>
             toastr.error('{{ session('gagal') }}', 'Gagal', {

@@ -4,6 +4,7 @@ use App\Http\Controllers\ApprovePenilaianController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BidangController;
+use App\Http\Controllers\DinilaiController;
 use App\Http\Controllers\StrukturalController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\JadwalController;
@@ -140,6 +141,9 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     Route::group(['middleware' => ['cek_login:pegawai', 'cek_dinilai:ya']], function () {
-        Route::put('/{id}/approve', [ApprovePenilaianController::class, 'approve_penilaian_dinilai'])->name('approve-penilaian-dinilai')->middleware('cek_terverifikasi');
+        Route::put('/{id}/approve', [ApprovePenilaianController::class, 'approve_penilaian_dinilai'])->name('approve-penilaian-dinilai')->middleware('cek_pengajuan_banding');
+        
+        Route::get('/{id}/pengajuan-banding', [DinilaiController::class, 'create_pengajuan_banding'])->name('create-pengajuan-banding')->middleware('cek_pengajuan_banding');
+        Route::post('/{id}/pengajuan-banding/store', [DinilaiController::class, 'store_pengajuan_banding'])->name('store-pengajuan-banding')->middleware('cek_pengajuan_banding');
     });
 });

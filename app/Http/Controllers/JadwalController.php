@@ -147,7 +147,7 @@ class JadwalController extends Controller
                         } catch (\Illuminate\Database\QueryException $ex) {
                             return back()->with('gagal', 'Gagal menambahkan jadwal');
                         }
-                        return back()->with('success', 'Sukses menambahkan jadwal');
+                        return redirect('jadwal')->with('success', 'Sukses menambahkan jadwal');
                     }
                 }
             }
@@ -226,7 +226,7 @@ class JadwalController extends Controller
                 } catch (\Illuminate\Database\QueryException $ex) {
                     return back()->with('gagal', 'Gagal mengubah jadwal');
                 }
-                return back()->with('success', 'Sukses mengubah jadwal');
+                return redirect('jadwal')->with('success', 'Sukses mengubah jadwal');
             }
         } else {
             return back()->with('gagal', 'tanggal mulai harus lebih kecil dari tanggal akhir');

@@ -80,7 +80,7 @@ class KpiperformanceController extends Controller
         } catch (\Illuminate\Database\QueryException $ex) {
             return back()->with('gagal', 'Gagal menambahkan kpi performance');
         }
-        return back()->with('success', 'Sukses menambahkan kpi performance');
+        return redirect()->route('kpiperformance',$id)->with('success', 'Sukses menambahkan kpi performance');
     }
 
     /**
@@ -154,7 +154,7 @@ class KpiperformanceController extends Controller
         } catch (\Illuminate\Database\QueryException $ex) {
             return back()->with('gagal', 'Gagal mengubah kpi performance');
         }
-        return back()->with('success', 'Sukses mengubah kpi performance');
+        return redirect()->route('kpiperformance',$id)->with('success', 'Sukses mengubah kpi performance');
     }
 
     /**

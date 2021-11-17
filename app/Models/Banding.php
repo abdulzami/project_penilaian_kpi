@@ -14,6 +14,8 @@ class Banding extends Model
     protected $fillable = [
         'id_penilaian',
         'alasan',
-        'bukti'
+        'bukti',
+        'status_banding',
+        'agreement'
     ];
 }
