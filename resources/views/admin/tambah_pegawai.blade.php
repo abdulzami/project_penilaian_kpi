@@ -42,7 +42,7 @@
                     </div>
                     <div class="form-group">
                         <label>Password</label>
-                        <span class="badge badge-info">pegawaibarata</span>
+                        <span class="badge light badge-info">pegawaibarata</span>
                     </div>
                     <div class="form-group">
                         <label>Jabatan</label>

@@ -82,9 +82,9 @@
                                     <th colspan="6"></th>
                                     <th>Total Bobot :
                                         @if ($total_bobot != 100)
-                                            <span class="badge badge-warning">{{ $total_bobot }}</span>
+                                            <span class="badge light badge-warning">{{ $total_bobot }}</span>
                                         @else
-                                            <span class="badge badge-primary">{{ $total_bobot }}</span>
+                                            <span class="badge light badge-primary">{{ $total_bobot }}</span>
                                         @endif
                                     </th>
                                 </tr>

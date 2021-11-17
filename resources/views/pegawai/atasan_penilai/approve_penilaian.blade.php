@@ -56,7 +56,7 @@
                                         <td>{{ $dinilai->capaian }}</td>
                                         <td>
                                             @if ($dinilai->catatan_penting == null)
-                                                <div class="badge badge-md badge-info">Tidak ada catatan penting</div>
+                                                <div class="badge light-md badge-info">Tidak ada catatan penting</div>
                                             @else
                                                 {{ $dinilai->catatan_penting }}
                                             @endif
@@ -64,26 +64,26 @@
                                         </td>
                                         <td>
                                             @if ($dinilai->performance != 0)
-                                                <div class="badge badge-xs badge-primary">KPI Performance <i
+                                                <div class="badge light-xs badge-primary">KPI Performance <i
                                                         class="fa fa-check"></i></div><br>
                                             @else
-                                                <div class="badge badge-xs badge-danger">KPI Performance <i
+                                                <div class="badge light-xs badge-danger">KPI Performance <i
                                                         class="fa fa-close"></i></div><br>
                                             @endif
 
                                             @if ($dinilai->perilaku != 0)
-                                                <div class="badge badge-xs badge-primary">KPI Perilaku <i
+                                                <div class="badge light-xs badge-primary">KPI Perilaku <i
                                                         class="fa fa-check"></i></div><br>
                                             @else
-                                                <div class="badge badge-xs badge-danger">KPI Perilaku <i
+                                                <div class="badge light-xs badge-danger">KPI Perilaku <i
                                                         class="fa fa-close"></i></div><br>
                                             @endif
 
                                             @if ($dinilai->catatan_penting != '')
-                                                <div class="badge badge-xs badge-primary">Catatan Penting <i
+                                                <div class="badge light-xs badge-primary">Catatan Penting <i
                                                         class="fa fa-check"></i></div>
                                             @else
-                                                <div class="badge badge-xs badge-warning">Catatan Penting <i
+                                                <div class="badge light-xs badge-warning">Catatan Penting <i
                                                         class="fa fa-close"></i></div>
                                             @endif
                                         </td>

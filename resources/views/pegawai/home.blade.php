@@ -132,13 +132,13 @@
                         <div class="card-body">
                             Status banding : 
                                 @if ($penilaian->status_banding == null)
-                                <span class="badge badge-light">Belum diajukan</span>
+                                <span class="badge light-light">Belum diajukan</span>
                                 @elseif($penilaian->status_banding == 'proses')
-                                <span class="badge badge-light">Info</span>
+                                <span class="badge light-light">Info</span>
                                 @elseif($penilaian->status_banding == 'ditolak')
-                                <span class="badge badge-danger">Ditolak</span>
+                                <span class="badge light-danger">Ditolak</span>
                                 @elseif($penilaian->status_banding == 'diterima')
-                                <span class="badge badge-primary">Diterima</span>
+                                <span class="badge light-primary">Diterima</span>
                                 @endif
                         </div>
                         <div class="card-footer border-0 pt-0">

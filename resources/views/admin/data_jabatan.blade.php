@@ -49,22 +49,22 @@
                                         <td>
                                             @if ($jabatan->id_penilai)
                                                 @if ($jabatan->total_bobot_jabatan == 100)
-                                                    <span class="badge badge badge-success">Total bobot kpi performance :
+                                                    <span class="badge light badge-success">Total bobot kpi performance :
                                                         100. Sudah siap
                                                         dilakukan penilaian</span>
                                                 @else
-                                                    <span class="badge badge badge-warning">Total bobot kpi performance :
+                                                    <span class="badge light badge-warning">Total bobot kpi performance :
                                                         {{ $jabatan->total_bobot_jabatan == null ? 0 : $jabatan->total_bobot_jabatan }}.
                                                         Belum siap dilakukan
                                                         penilaian</span>
                                                 @endif
                                             @else
-                                                <span class="badge badge badge-dark">Tidak mempunyai penilai</span>
+                                                <span class="badge light badge-dark">Tidak mempunyai penilai</span>
                                             @endif
 
                                         </td>
                                         {{-- @if ($jabatan->nama_penilai == null)
-                                            <td> <span class="badge badge-xs badge-danger">Tidak ada penilainya</span></td>
+                                            <td> <span class="badge light-xs badge-danger">Tidak ada penilainya</span></td>
                                         @else
                                             <td>{{ $jabatan->nama_penilai }} {{ $jabatan->nama_struktural_penilai }} {{ $jabatan->nama_bidang_penilai }}</td>
                                         @endif --}}
