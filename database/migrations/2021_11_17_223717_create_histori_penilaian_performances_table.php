@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBandingsTable extends Migration
+class CreateHistoriPenilaianPerformancesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,15 @@ class CreateBandingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('bandings', function (Blueprint $table) {
-            $table->id('id_banding');
+        Schema::create('histori_penilaian_performances', function (Blueprint $table) {
+            $table->id('id_histori_penilaian_performance');
             $table->unsignedBigInteger('id_penilaian');
-            $table->string('alasan',5000);
-            $table->string('bukti');
-            $table->enum('status_banding',['diterima','diterima_mv','ditolak','proses']);
-            $table->string('agreement');
-            $table->string('alasan_tolak',5000)->nullable();
+            $table->unsignedBigInteger('id_performance');
+            $table->float('realisasi');
             $table->timestamps();
 
             $table->foreign('id_penilaian')->references('id_penilaian')->on('penilaians');
+            $table->foreign('id_performance')->references('id_performance')->on('kpi_performances');
         });
     }
 
@@ -34,6 +32,6 @@ class CreateBandingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bandings');
+        Schema::dropIfExists('histori_penilaian_performances');
     }
 }

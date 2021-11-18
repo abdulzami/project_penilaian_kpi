@@ -18,7 +18,7 @@ class DinilaiController extends Controller
         $hash = new Hashids();
         request()->validate(
             [
-                'tulisan_komplain' => 'required|max:1000|min:4',
+                'tulisan_komplain' => 'required|max:5000|min:4',
                 'bukti_pendukung' => 'required|mimetypes:application/pdf|file|max:1000',
                 'agreement' => 'required'
             ]

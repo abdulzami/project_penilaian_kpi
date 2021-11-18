@@ -14,7 +14,7 @@
         </div>
         <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active">Penilaian Selesai</li>
+                <li class="breadcrumb-item active">Banding Penilaian</li>
             </ol>
         </div>
     </div>
@@ -24,7 +24,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Daftar Selesai</h4>
+                    <h4 class="card-title">Daftar Banding Penilaian</h4>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -37,9 +37,10 @@
                                     <th>Jabatan</th>
                                     <th>Total Sebelum Pengurangan</th>
                                     <th>Total Sebelum Banding</th>
-                                    {{-- <th>Total Setelah Banding</th> --}}
                                     <th>Total</th>
                                     <th style="width: 100px">Capaian</th>
+                                    <th>Status Banding</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -62,6 +63,14 @@
                                             <td>
                                                 <div class="badge badge-xs light badge-danger">Banding ditolak</div>
                                             </td>
+                                        @elseif($dinilai->total_sebelum_banding == 'belum_diajukan')
+                                        <td>
+                                            <div class="badge badge-xs light badge-info">Belum diajukan</div>
+                                        </td>
+                                        @elseif($dinilai->total_sebelum_banding == 'proses')
+                                        <td>
+                                            <div class="badge badge-xs light badge-info">Proses</div>
+                                        </td>
                                         @elseif($dinilai->total_sebelum_banding == 'tidak_banding')
                                             <td>
                                                 <div class="badge badge-xs light badge-info">Tidak melakukan banding</div>
@@ -69,34 +78,36 @@
                                         @else
                                             <td>{{ $dinilai->total_sebelum_banding }}</td>
                                         @endif
-
-                                        <td>{{ $dinilai->total }}</td>
+                                        <td>{{ $dinilai->total }} </td>
+                                        {{-- <td></td> --}}
                                         <td>{{ $dinilai->capaian }}</td>
-                                        {{-- <td>
-                                            @if ($dinilai->total_awal == 'no')
-                                                <div class="badge badge-xs light badge-info">Tidak ada pengurangan</div>
-                                            @else
-                                                {{ $dinilai->total_awal }}
+                                        <td>
+                                            @if ($dinilai->status_banding == 'diterima_mv')
+                                                <div class="badge badge-xs light badge-success">Setuju</div>
+                                                <div class="badge badge-xs light badge-info">Menunggu Verifikasi</div>
+                                            @elseif($dinilai->status_banding == 'proses')
+                                                <div class="badge badge-xs light badge-info">Proses</div>
+                                            @elseif($dinilai->status_banding == null)
+                                                <div class="badge badge-xs   light badge-info">Belum diajukan</div>
                                             @endif
                                         </td>
                                         <td>
-                                            @if ($dinilai->total_sebelum_banding == 'no' && $dinilai->status_banding == 'ditolak')
-                                            <div class="badge badge-xs light badge-danger">Banding ditolak</div>
-                                            @elseif($dinilai->total_sebelum_banding == 'no' && $dinilai->status_banding != 'ditolak')
-                                            <div class="badge badge-xs light badge-info">Tidak ada banding</div>
+                                            @if ($dinilai->status_penilaian == 'terverifikasi' && $dinilai->status_banding == 'proses')
+                                                <a class="btn btn-xs btn-warning mb-1"
+                                                    href="{{ route('bp-review-pengajuan', $hash->encode($dinilai->id_penilaian)) }}">Review
+                                                    Pengajuan</a>
+                                                @if ($dinilai->pengurangan && $dinilai->catatan_penting)
+                                                    <a class="btn btn-xs btn-dark mb-1"
+                                                        href="{{ route('bp-lihat-catatan', $hash->encode($dinilai->id_penilaian)) }}">Lihat
+                                                        Catatan</a>
+                                                @endif
+                                                <a class="btn btn-xs btn-info mb-1"
+                                                    href="{{ route('bp-edit-kpi-performance', $hash->encode($dinilai->id_penilaian)) }}">Edit
+                                                    KPI Performance</a>
                                             @else
-                                                {{ $dinilai->total_sebelum_banding }}
+                                                <div class="badge badge-md light badge-dark">No Action</div>
                                             @endif
-                                        </td> --}}
-                                        {{-- <td>
-                                            @if ($dinilai->total_sebelum_banding == 'no' && $dinilai->status_banding == 'ditolak')
-                                            <div class="badge badge-xs light badge-danger">Banding ditolak</div>
-                                            @elseif($dinilai->total_sebelum_banding == 'no' && $dinilai->status_banding != 'ditolak')
-                                            <div class="badge badge-xs light badge-info">Tidak ada banding</div>
-                                            @else
-                                                {{ $dinilai->total }}
-                                            @endif
-                                        </td> --}}
+                                        </td>
                                     </tr>
                                 @endforeach
 

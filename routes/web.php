@@ -11,6 +11,7 @@ use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\KpiperformanceController;
 use App\Http\Controllers\KpiperilakuController;
 use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\PenilaianPenilaiBandingController;
 use App\Http\Controllers\PenilaianPenilaiBelumDinilaiController;
 use App\Http\Controllers\PenilaianPenilaiMenungguVerifikasi;
 use App\Http\Controllers\PenilaianPenilaiSelesai;
@@ -105,11 +106,12 @@ Route::group(['middleware' => ['auth']], function () {
         //end kpi perilaku
 
     });
-    Route::group(['middleware' => ['cek_login:pegawai', 'cek_atasanpenilai:ya','cek_berlangsung:ya']], function () {
+    Route::group(['middleware' => ['cek_login:pegawai', 'cek_atasanpenilai:ya', 'cek_berlangsung:ya']], function () {
         Route::get('/approve-penilaian', [ApprovePenilaianController::class, 'show_approve_penilaian'])->name('approve-penilaian');
-        Route::get('/approve-penilaian/{id}/review', [ApprovePenilaianController::class, 'review_penilaian'])->name('approve-penilaian-review')->middleware(['cek_menunggu_verifikasi','cek_catatan_penting']);
-        Route::put('/approve-penilaian/{id}/review/approve', [ApprovePenilaianController::class, 'approve_penilaian'])->name('approve-penilaian-approve')->middleware(['cek_menunggu_verifikasi','cek_catatan_penting']);
+        Route::get('/approve-penilaian/{id}/review', [ApprovePenilaianController::class, 'review_penilaian'])->name('approve-penilaian-review')->middleware(['cek_menunggu_verifikasi', 'cek_catatan_penting']);
+        Route::put('/approve-penilaian/{id}/review/approve', [ApprovePenilaianController::class, 'approve_penilaian'])->name('approve-penilaian-approve')->middleware(['cek_menunggu_verifikasi', 'cek_catatan_penting']);
         Route::put('/approve-penilaian/{id}/approve', [ApprovePenilaianController::class, 'approve_penilaian_langsung'])->name('approve-penilaian-approve-langsung')->middleware('cek_menunggu_verifikasi');
+        Route::put('/approve-penilaian/{id}/approve-banding-penilaian', [ApprovePenilaianController::class, 'approve_banding_penilaian'])->name('approve-banding-penilaian');
     });
 
     Route::group(['middleware' => ['cek_login:pegawai', 'cek_penilai:ya']], function () {
@@ -132,17 +134,33 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::put('/belum-dinilai/{id}/approve', [PenilaianPenilaiBelumDinilaiController::class, 'approve_to_menunggu_verifikasi'])->name('belum-dinilai-approve');
                 //end belum dinilai
             });
+
+            //start banding penilaian
+            Route::get('/banding-penilaian', [PenilaianPenilaiBandingController::class, 'show_banding_penilaian'])->name('banding-penilaian');
+            Route::group(['middleware' => ['cek_action_banding_penilaian']], function () {
+                Route::get('/banding-penilaian/{id}/edit-kpi-performance', [PenilaianPenilaiBandingController::class, 'edit_kpi_performance'])->name('bp-edit-kpi-performance');
+                Route::put('/banding-penilaian/{id}/edit-kpi-performance/update', [PenilaianPenilaiBandingController::class, 'update_kpi_performance_setuju_pengajuan'])->name('bp-update-kpi-performance-sp');
+
+                Route::get('/banding-penilaian/{id}/lihat-catatan', [PenilaianPenilaiBandingController::class, 'lihat_catatan'])->name('bp-lihat-catatan')->middleware('cek_catatan_penting');
+                Route::get('/banding-penilaian/{id}/review-pengajuan', [PenilaianPenilaiBandingController::class, 'review_pengajuan'])->name('bp-review-pengajuan');
+                Route::put('/banding-penilaian/{id}/review-pengajuan/tolak-pengajuan', [PenilaianPenilaiBandingController::class, 'tolak_pengajuan'])->name('bp-tolak-pengajuan');
+            });
+            //end banding penilaian
+
+
             //start menunggu verifikasi
             Route::get('/menunggu-verifikasi', [PenilaianPenilaiMenungguVerifikasi::class, 'show_menunggu_verifikasi'])->name('menunggu-verifikasi');
             //end menunggu verifikasi
 
+            //start selesai
             Route::get('/selesai', [PenilaianPenilaiSelesai::class, 'show_selesai'])->name('selesai');
+            //end selesai
         });
     });
 
     Route::group(['middleware' => ['cek_login:pegawai', 'cek_dinilai:ya']], function () {
         Route::put('/{id}/approve', [ApprovePenilaianController::class, 'approve_penilaian_dinilai'])->name('approve-penilaian-dinilai')->middleware('cek_pengajuan_banding');
-        
+
         Route::get('/{id}/pengajuan-banding', [DinilaiController::class, 'create_pengajuan_banding'])->name('create-pengajuan-banding')->middleware('cek_pengajuan_banding');
         Route::post('/{id}/pengajuan-banding/store', [DinilaiController::class, 'store_pengajuan_banding'])->name('store-pengajuan-banding')->middleware('cek_pengajuan_banding');
     });

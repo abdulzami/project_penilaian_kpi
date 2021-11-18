@@ -39,7 +39,7 @@ class HomeController extends Controller
             if (!$jadwal->isEmpty()) {
                 $penilaian = Penilaian::select('penilaians.id_penilaian','penilaians.id_pegawai','penilaians.id_jadwal'
                 ,'penilaians.id_pegawai','penilaians.id_penilai','penilaians.status_penilaian','penilaians.catatan_penting'
-                ,'penilaians.pengurangan','bandings.id_banding','bandings.status_banding')
+                ,'penilaians.pengurangan','bandings.id_banding','bandings.status_banding','bandings.alasan_tolak')
                 ->where('id_pegawai', Auth::user()->id_user)->where('id_jadwal', $jadwal[0]->id_jadwal)
                 ->leftJoin('bandings','bandings.id_penilaian','=','penilaians.id_penilaian')
                 ->get();
@@ -51,6 +51,7 @@ class HomeController extends Controller
                         END AS skor"))
                         ->join('kpi_performances', 'kpi_performances.id_performance', '=', 'penilaian_performances.id_performance')
                         ->where('id_penilaian', $penilaian[$i]->id_penilaian)->get();
+
                     $performances = $performances->sum('skor');
                     $performances = $performances * 70 / 100;
                     $perilakus = PenilaianPerilaku::select(DB::raw('SUM(nilai_perilaku *20 * 100/6/100)*30/100 AS skor_akhir'))->where('id_penilaian', $penilaian[$i]->id_penilaian)->get();
@@ -65,7 +66,11 @@ class HomeController extends Controller
                     return view('pegawai.home', compact('nama_periode'));
                 } else {
                     $penilaian = $penilaian[0];
-                    $kpiperformances = PenilaianPerformance::leftjoin('kpi_performances', 'kpi_performances.id_performance', '=', 'penilaian_performances.id_performance')->where('id_penilaian', $penilaian->id_penilaian)->get();
+                    $kpiperformances = PenilaianPerformance::select('kpi_performances.kategori','kpi_performances.tipe_performance','kpi_performances.indikator_kpi','kpi_performances.definisi','kpi_performances.target','kpi_performances.satuan','kpi_performances.bobot','penilaian_performances.realisasi','histori_penilaian_performances.realisasi as realisasi_lama')
+                    ->leftjoin('kpi_performances', 'kpi_performances.id_performance', '=', 'penilaian_performances.id_performance')
+                    ->leftJoin('histori_penilaian_performances','histori_penilaian_performances.id_penilaian','=','penilaian_performances.id_penilaian')
+                    ->where('penilaian_performances.id_penilaian', $penilaian->id_penilaian)->get();
+                    
                     return view('pegawai.home', compact('nama_periode', 'penilaian', 'kpiperformances','hash'));
                 }
             }else{
