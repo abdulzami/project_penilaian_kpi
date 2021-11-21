@@ -40,6 +40,6 @@ class DinilaiController extends Controller
         } catch (\Illuminate\Database\QueryException $ex) {
             return back()->with('gagal', 'Gagal mengajukan banding');
         }
-        return redirect('home')->with('success', 'Sukses mengajukan banding');
+        return redirect('dashboard')->with('success', 'Sukses mengajukan banding');
     }
 }

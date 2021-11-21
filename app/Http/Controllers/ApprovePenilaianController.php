@@ -274,6 +274,6 @@ class ApprovePenilaianController extends Controller
         } catch (\Illuminate\Database\QueryException $ex) {
             return back()->with('gagal', 'Gagal aprrove penilaian');
         }
-        return redirect('home')->with('success', 'Sukses approve penilaian');
+        return redirect('dashboard')->with('success', 'Sukses approve penilaian');
     }
 }

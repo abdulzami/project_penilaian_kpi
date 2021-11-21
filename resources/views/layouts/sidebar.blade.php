@@ -2,9 +2,9 @@
     <div class="deznav-scroll">
         <ul class="metismenu" id="menu">
             <li>
-                <a href="{{ route('home') }}" class="ai-icon" aria-expanded="true">
-                    <i class="flaticon-381-home"></i>
-                    <span class="nav-text">Home</span>
+                <a href="{{ route('dashboard') }}" class="ai-icon" aria-expanded="true">
+                    <i class="flaticon-381-networking"></i>
+                    <span class="nav-text">Dashboard</span>
                 </a>
             </li>
             @if (Auth::user()->level == 'admin')

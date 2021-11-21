@@ -108,7 +108,7 @@
                             @elseif(Auth::user()->level == 'admin')
                                 Admin
                             @endif
-                            <a href="{{ route('home') }}"><b>Home<b></a>
+                            <a href="{{ route('dashboard') }}"><b>Dashboard<b></a>
                             <a href="{{ route('logout') }}"><b>Logout<b></a>
                             @csrf
                         </div>

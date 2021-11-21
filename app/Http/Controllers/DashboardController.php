@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class HomeController extends Controller
+class DashboardController extends Controller
 {
     public function index()
     {
@@ -34,7 +34,7 @@ class HomeController extends Controller
         // $id = Auth::user()->id_user;
 
         if (Auth::user()->level == 'admin') {
-            return view('admin.home', compact('nama_periode'));
+            return view('admin.dashboard', compact('nama_periode'));
         } elseif (Auth::user()->level == 'pegawai') {
             if (!$jadwal->isEmpty()) {
                 $penilaian = Penilaian::select('penilaians.id_penilaian','penilaians.id_pegawai','penilaians.id_jadwal'
@@ -63,7 +63,7 @@ class HomeController extends Controller
                     $penilaian[$i]->capaian = $total . " %";
                 }
                 if ($penilaian->isEmpty()) {
-                    return view('pegawai.home', compact('nama_periode'));
+                    return view('pegawai.dashboard', compact('nama_periode'));
                 } else {
                     $penilaian = $penilaian[0];
                     $kpiperformances = PenilaianPerformance::select('kpi_performances.kategori','kpi_performances.tipe_performance','kpi_performances.indikator_kpi','kpi_performances.definisi','kpi_performances.target','kpi_performances.satuan','kpi_performances.bobot','penilaian_performances.realisasi','histori_penilaian_performances.realisasi as realisasi_lama')
@@ -71,10 +71,10 @@ class HomeController extends Controller
                     ->leftJoin('histori_penilaian_performances','histori_penilaian_performances.id_penilaian','=','penilaian_performances.id_penilaian')
                     ->where('penilaian_performances.id_penilaian', $penilaian->id_penilaian)->get();
                     
-                    return view('pegawai.home', compact('nama_periode', 'penilaian', 'kpiperformances','hash'));
+                    return view('pegawai.dashboard', compact('nama_periode', 'penilaian', 'kpiperformances','hash'));
                 }
             }else{
-                return view('pegawai.home');
+                return view('pegawai.dashboard');
             }
         } else {
             return redirect('/')->with('error', 'Anda tidak punya akses !');

@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApprovePenilaianController;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BidangController;
 use App\Http\Controllers\DinilaiController;
@@ -32,7 +32,7 @@ Route::get('/', [AuthController::class, 'index'])->name('login');
 
 Route::post('/proses_login', [AuthController::class, 'proses_login'])->name('proses_login');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::group(['middleware' => ['auth']], function () {
     Route::group(['middleware' => ['cek_login:admin']], function () {
