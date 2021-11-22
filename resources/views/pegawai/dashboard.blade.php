@@ -40,25 +40,33 @@
                     <div class="row">
                         <div class="col-sm-3 mb-4">
                             <div class="border px-3 py-3 rounded-xl">
-                                <h2 class="fs-32 font-w600 counter">25</h2>
+                                <h2 class="fs-32 font-w600 counter">{{$belum_dinilai}}</h2>
                                 <p class="fs-16 mb-0">Belum Dinilai</p>
                             </div>
                         </div>
                         <div class="col-sm-3 mb-4">
                             <div class="border px-3 py-3 rounded-xl">
-                                <h2 class="fs-32 font-w600 counter">25</h2>
+                                <h2 class="fs-32 font-w600 counter">{{$menunggu_verifikasi}}</h2>
                                 <p class="fs-16 mb-0">Menunggu Verifikasi</p>
                             </div>
                         </div>
+                        @atasanpenilai
                         <div class="col-sm-3 mb-4">
                             <div class="border px-3 py-3 rounded-xl">
-                                <h2 class="fs-32 font-w600 counter">60</h2>
-                                <p class="fs-16 mb-0">Proses Banding</p>
+                                <h2 class="fs-32 font-w600 counter">{{sizeof($membutuhkan_verifikasi)}}</h2>
+                                <p class="fs-16 mb-0">Membutuhkan Verifikasi</p>
+                            </div>
+                        </div>
+                        @endatasanpenilai
+                        <div class="col-sm-3 mb-4">
+                            <div class="border px-3 py-3 rounded-xl">
+                                <h2 class="fs-32 font-w600 counter">{{$banding_penilaian}}</h2>
+                                <p class="fs-16 mb-0">Banding Penilaian</p>
                             </div>
                         </div>
                         <div class="col-sm-3 mb-4">
                             <div class="border px-3 py-3 rounded-xl">
-                                <h2 class="fs-32 font-w600 counter">7</h2>
+                                <h2 class="fs-32 font-w600 counter">{{$selesai}}</h2>
                                 <p class="fs-16 mb-0">Selesai</p>
                             </div>
                         </div>
@@ -68,197 +76,200 @@
         </div>
         @endpenilai
         @dinilai
-        <div class="col-xl-12">
-            <div class="card ">
-                <div class="card-header">
-                    <h4 class="card-title mb-1">Penilaian KPI anda</h4>
-                </div>
-                <div class="card-body">
-                    @if ($penilaian->status_penilaian != 'terverifikasi' && $penilaian->status_penilaian != 'selesai' && $penilaian->id_banding == null)
-                        <div class="col-xl-12">
-                            <div class="card text-white bg-info">
-                                <div class="card-body mb-0">
-                                    <p class="card-text">Penilaian KPI anda sedang dalam proses.</p>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                    @if (($penilaian->status_banding != null) & ($penilaian->status_penilaian != 'selesai'))
-                        <div class="col-xl-12">
-                            <div class="card text-white bg-info">
-                                <div class="card-body mb-0">
-                                    <p class="card-text">Penilaian KPI anda sedang dalam proses banding.</p>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                    @if ($penilaian->status_penilaian == 'terverifikasi' || $penilaian->status_penilaian == 'selesai' || $penilaian->status_banding != null)
-                        <div class="col-xl-12">
-                            <div class="card border">
-                                <div class="card-header border-0 pb-0">
-                                    <h5 class="card-title">Hasil Penilaian KPI Performance Anda </h5>
-                                    @if ($penilaian->status_penilaian != 'selesai' && $penilaian->status_banding == null)
-                                        <a href="#" class="btn btn-xs btn-primary mb-1 swall-yeah"
-                                            data-id="{{ $hash->encode($penilaian->id_penilaian) }}">
-                                            <form
-                                                action="{{ route('approve-penilaian-dinilai', $hash->encode($penilaian->id_penilaian)) }}"
-                                                id="approve{{ $hash->encode($penilaian->id_penilaian) }}" method="post">
-                                                @method('put')
-                                                @csrf
-                                            </form>
-                                            Approve
-                                        </a>
-                                    @endif
-
-                                </div>
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>Kategori</th>
-                                                    <th>Tipe Performance</th>
-                                                    <th>Indikator KPI</th>
-                                                    <th>Definisi</th>
-                                                    <th>Target</th>
-                                                    <th>Bobot</th>
-                                                    @if ($penilaian->status_banding == 'diterima')
-                                                        <th>Realisasi Sebelum Banding</th>
-                                                    @endif
-                                                    <th>Realisasi</th>
-                                                </tr>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($kpiperformances as $index => $kpip)
-                                                    <tr>
-                                                        <td>{{ $index + 1 }}</td>
-                                                        <td>{{ $kpip->kategori }}</td>
-                                                        <td>{{ $kpip->tipe_performance }}</td>
-                                                        <td>{{ $kpip->indikator_kpi }}</td>
-                                                        <td>{{ $kpip->definisi }}</td>
-                                                        <td>{{ $kpip->target }} {{ $kpip->satuan }}</td>
-                                                        <td>{{ $kpip->bobot }}</td>
-                                                        @if ($penilaian->status_banding == 'diterima')
-                                                            <td>{{ $kpip->realisasi_lama }} {{ $kpip->satuan }}</td>
-                                                        @endif
-                                                        <td>{{ $kpip->realisasi }} {{ $kpip->satuan }}</td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+        @if ($penilaian)
+            <div class="col-xl-12">
+                <div class="card ">
+                    <div class="card-header">
+                        <h4 class="card-title mb-1">Penilaian KPI anda</h4>
+                    </div>
+                    <div class="card-body">
+                        @if ($penilaian->status_penilaian != 'terverifikasi' && $penilaian->status_penilaian != 'selesai' && $penilaian->id_banding == null)
+                            <div class="col-xl-12">
+                                <div class="card text-white bg-info">
+                                    <div class="card-body mb-0">
+                                        <p class="card-text">Penilaian KPI anda sedang dalam proses.</p>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        @if ($penilaian->catatan_penting != null)
+                        @endif
+                        @if (($penilaian->status_banding != null) & ($penilaian->status_penilaian != 'selesai'))
+                            <div class="col-xl-12">
+                                <div class="card text-white bg-info">
+                                    <div class="card-body mb-0">
+                                        <p class="card-text">Penilaian KPI anda sedang dalam proses banding.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if ($penilaian->status_penilaian == 'terverifikasi' || $penilaian->status_penilaian == 'selesai' || $penilaian->status_banding != null)
                             <div class="col-xl-12">
                                 <div class="card border">
                                     <div class="card-header border-0 pb-0">
-                                        <h5 class="card-title text-danger">Catatan Penting !!</h5>
+                                        <h5 class="card-title">Hasil Penilaian KPI Performance Anda </h5>
+                                        @if ($penilaian->status_penilaian != 'selesai' && $penilaian->status_banding == null)
+                                            <a href="#" class="btn btn-xs btn-primary mb-1 swall-yeah"
+                                                data-id="{{ $hash->encode($penilaian->id_penilaian) }}">
+                                                <form
+                                                    action="{{ route('approve-penilaian-dinilai', $hash->encode($penilaian->id_penilaian)) }}"
+                                                    id="approve{{ $hash->encode($penilaian->id_penilaian) }}" method="post">
+                                                    @method('put')
+                                                    @csrf
+                                                </form>
+                                                Approve
+                                            </a>
+                                        @endif
+
                                     </div>
                                     <div class="card-body">
-                                        {{ $penilaian->catatan_penting }}
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                    <tr>
+                                                        <th>No</th>
+                                                        <th>Kategori</th>
+                                                        <th>Tipe Performance</th>
+                                                        <th>Indikator KPI</th>
+                                                        <th>Definisi</th>
+                                                        <th>Target</th>
+                                                        <th>Bobot</th>
+                                                        @if ($penilaian->status_banding == 'diterima')
+                                                            <th>Realisasi Sebelum Banding</th>
+                                                        @endif
+                                                        <th>Realisasi</th>
+                                                    </tr>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($kpiperformances as $index => $kpip)
+                                                        <tr>
+                                                            <td>{{ $index + 1 }}</td>
+                                                            <td>{{ $kpip->kategori }}</td>
+                                                            <td>{{ $kpip->tipe_performance }}</td>
+                                                            <td>{{ $kpip->indikator_kpi }}</td>
+                                                            <td>{{ $kpip->definisi }}</td>
+                                                            <td>{{ $kpip->target }} {{ $kpip->satuan }}</td>
+                                                            <td>{{ $kpip->bobot }}</td>
+                                                            @if ($penilaian->status_banding == 'diterima')
+                                                                <td>{{ $kpip->realisasi_lama }} {{ $kpip->satuan }}</td>
+                                                            @endif
+                                                            <td>{{ $kpip->realisasi }} {{ $kpip->satuan }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        @endif
-                        <div class="col-xl-12">
-                            <div class="card border">
-                                <div class="card-header border-0 pb-0">
-                                    <h5 class="card-title">Total Nilai</h5>
-                                </div>
-                                <div class="card-body">
-                                    @if ($penilaian->pengurangan == null)
-                                        Total nilai anda
-                                        <b>{{ $penilaian->total }}</b>
-                                    @endif
-
-                                    @if ($penilaian->pengurangan)
-                                        Total nilai anda
-                                        {{ $penilaian->total }}
-                                        dengan pengurangan nilai sebesar {{ $penilaian->pengurangan }} % sehingga menjadi
-                                        <b>{{ $penilaian->total - ($penilaian->total * $penilaian->pengurangan) / 100 }}</b>
-                                    @endif
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-12">
-                            <div class="card border">
-                                <div class="card-header border-0 pb-0">
-                                    <h5 class="card-title">Banding Penilaian</h5>
-                                </div>
-                                <div class="card-body">
-                                    Status banding :
-                                    @if ($penilaian->status_banding == null)
-                                        <span class="badge light badge-dark">Belum diajukan</span>
-                                    @elseif($penilaian->status_banding != null && $penilaian->status_penilaian !=
-                                        'selesai' )
-                                        <span class="badge light badge-info">Sedang di proses</span>
-                                    @elseif($penilaian->status_banding == 'ditolak' && $penilaian->status_penilaian ==
-                                        'selesai')
-                                        <span class="badge light badge-danger">Ditolak</span>
-                                    @elseif($penilaian->status_banding == 'diterima' && $penilaian->status_penilaian ==
-                                        'selesai')
-                                        <span class="badge light badge-primary">Disetujui</span>
-                                    @endif
-                                    <br><br>
-                                    @if ($penilaian->alasan_tolak)
-                                        Alasan Tolak : {{ $penilaian->alasan_tolak }}
-                                    @endif
-
-                                </div>
-
-                                @if ($penilaian->status_banding == null && $penilaian->status_penilaian != 'selesai')
-                                    <div class="card-footer border-0 pt-0">
-                                        <center><a
-                                                href="{{ route('create-pengajuan-banding', $hash->encode($penilaian->id_penilaian)) }}"><button
-                                                    type="submit" class="btn btn-xs btn-primary">Ajukan banding
-                                                    nilai</button></a>
-                                        </center>
+                            @if ($penilaian->catatan_penting != null)
+                                <div class="col-xl-12">
+                                    <div class="card border">
+                                        <div class="card-header border-0 pb-0">
+                                            <h5 class="card-title text-danger">Catatan Penting !!</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            {{ $penilaian->catatan_penting }}
+                                        </div>
                                     </div>
-                                @endif
-                            </div>
-                        </div>
-                        @if ($penilaian->status_penilaian == 'selesai' && $penilaian->status_banding == null)
+                                </div>
+                            @endif
                             <div class="col-xl-12">
-                                <div class="card text-white bg-primary">
-                                    <div class="card-body mb-0">
-                                        <p class="card-text">Penilaian telah anda setujui. Penilaian selesai.</p>
+                                <div class="card border">
+                                    <div class="card-header border-0 pb-0">
+                                        <h5 class="card-title">Total Nilai</h5>
                                     </div>
-                                </div>
-                            </div>
-                        @endif
+                                    <div class="card-body">
+                                        @if ($penilaian->pengurangan == null)
+                                            Total nilai anda
+                                            <b>{{ $penilaian->total }}</b>
+                                        @endif
 
-                        @if ($penilaian->status_penilaian == 'selesai' && $penilaian->status_banding == 'diterima')
-                            <div class="col-xl-12">
-                                <div class="card text-white bg-primary">
-                                    <div class="card-body mb-0">
-                                        <p class="card-text">Pengajuan banding telah disetujui dan penilaian sudah
-                                            diubah.
-                                            Penilaian selesai.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
+                                        @if ($penilaian->pengurangan)
+                                            Total nilai anda
+                                            {{ $penilaian->total }}
+                                            dengan pengurangan nilai sebesar {{ $penilaian->pengurangan }} % sehingga menjadi
+                                            <b>{{ $penilaian->total - ($penilaian->total * $penilaian->pengurangan) / 100 }}</b>
+                                        @endif
 
-                        @if ($penilaian->status_penilaian == 'selesai' && $penilaian->status_banding == 'ditolak')
-                            <div class="col-xl-12">
-                                <div class="card text-white bg-primary">
-                                    <div class="card-body mb-0">
-                                        <p class="card-text">Pengajuan banding anda ditolak.
-                                            Penilaian selesai.</p>
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-xl-12">
+                                <div class="card border">
+                                    <div class="card-header border-0 pb-0">
+                                        <h5 class="card-title">Banding Penilaian</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        Status banding :
+                                        @if ($penilaian->status_banding == null)
+                                            <span class="badge light badge-dark">Belum diajukan</span>
+                                        @elseif($penilaian->status_banding != null && $penilaian->status_penilaian !=
+                                            'selesai' )
+                                            <span class="badge light badge-info">Sedang di proses</span>
+                                        @elseif($penilaian->status_banding == 'ditolak' && $penilaian->status_penilaian ==
+                                            'selesai')
+                                            <span class="badge light badge-danger">Ditolak</span>
+                                        @elseif($penilaian->status_banding == 'diterima' && $penilaian->status_penilaian ==
+                                            'selesai')
+                                            <span class="badge light badge-primary">Disetujui</span>
+                                        @endif
+                                        <br><br>
+                                        @if ($penilaian->alasan_tolak)
+                                            Alasan Tolak : {{ $penilaian->alasan_tolak }}
+                                        @endif
+
+                                    </div>
+
+                                    @if ($penilaian->status_banding == null && $penilaian->status_penilaian != 'selesai')
+                                        <div class="card-footer border-0 pt-0">
+                                            <center><a
+                                                    href="{{ route('create-pengajuan-banding', $hash->encode($penilaian->id_penilaian)) }}"><button
+                                                        type="submit" class="btn btn-xs btn-primary">Ajukan banding
+                                                        nilai</button></a>
+                                            </center>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                            @if ($penilaian->status_penilaian == 'selesai' && $penilaian->status_banding == null)
+                                <div class="col-xl-12">
+                                    <div class="card text-white bg-primary">
+                                        <div class="card-body mb-0">
+                                            <p class="card-text">Penilaian telah anda setujui. Penilaian selesai.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            @if ($penilaian->status_penilaian == 'selesai' && $penilaian->status_banding == 'diterima')
+                                <div class="col-xl-12">
+                                    <div class="card text-white bg-primary">
+                                        <div class="card-body mb-0">
+                                            <p class="card-text">Pengajuan banding telah disetujui dan penilaian sudah
+                                                diubah.
+                                                Penilaian selesai.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            @if ($penilaian->status_penilaian == 'selesai' && $penilaian->status_banding == 'ditolak')
+                                <div class="col-xl-12">
+                                    <div class="card text-white bg-primary">
+                                        <div class="card-body mb-0">
+                                            <p class="card-text">Pengajuan banding anda ditolak.
+                                                Penilaian selesai.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                         @endif
-                    @endif
+                    </div>
                 </div>
             </div>
-        </div>
+        @endif
+       
         @enddinilai
     </div>
     @endpenilaian_berlangsung

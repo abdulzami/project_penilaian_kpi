@@ -22,17 +22,15 @@ class PenilaianPenilaiMenungguVerifikasi extends Controller
         $sekarang = Carbon::now();
         $sekarang = $sekarang->toDateString();
         $jadwal = Jadwal::select('id_jadwal')->whereRaw('? between tanggal_mulai and tanggal_akhir', $sekarang)->first();
-        $dinilais = Jabatan::select('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting','bandings.id_banding')
+        $dinilais = Jabatan::select('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
             ->join('users', 'jabatans.id_jabatan', '=', 'users.id_jabatan')
             ->join('bidangs', 'jabatans.id_bidang', '=', 'bidangs.id_bidang')
             ->join('strukturals', 'bidangs.id_struktural', 'strukturals.id_struktural')
             ->join('penilaians', 'users.id_user', '=', 'penilaians.id_pegawai')
-            ->leftJoin('bandings','bandings.id_penilaian','=','penilaians.id_penilaian')
             ->where('jabatans.id_penilai', $user->id_jabatan)
             ->where('penilaians.status_penilaian', 'menunggu_verifikasi')
             ->where('penilaians.id_jadwal', $jadwal->id_jadwal)
-            ->where('bandings.id_banding',null)
-            ->groupBy('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.id_jadwal', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting','bandings.id_banding')
+            ->groupBy('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.id_jadwal', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
             ->get();
         for ($i = 0; $i < sizeof($dinilais); $i++) {
             $performances = PenilaianPerformance::select(DB::raw("CASE

@@ -62,7 +62,7 @@
                 @atasanpenilai
                 <li>
                     <a href="{{ route('approve-penilaian') }}" class="ai-icon" aria-expanded="true">
-                        <i class="flaticon-381-list-1" style="font-size: 24px"></i>
+                        <i class="flaticon-381-list-1"></i>
                         <span class="nav-text">Approve Penilaian</span>
                     </a>
                 </li>
