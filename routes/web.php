@@ -15,7 +15,9 @@ use App\Http\Controllers\PenilaianPenilaiBandingController;
 use App\Http\Controllers\PenilaianPenilaiBelumDinilaiController;
 use App\Http\Controllers\PenilaianPenilaiMenungguVerifikasi;
 use App\Http\Controllers\PenilaianPenilaiSelesai;
+use App\Http\Controllers\ProfilController;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpKernel\Profiler\Profile;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,12 +31,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [AuthController::class, 'index'])->name('login');
-
 Route::post('/proses_login', [AuthController::class, 'proses_login'])->name('proses_login');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::group(['middleware' => ['auth']], function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
+    Route::put('/profil/ganti_password', [ProfilController::class, 'ganti_password'])->name('ganti-password');
     Route::group(['middleware' => ['cek_login:admin']], function () {
         //start struktural
         Route::get('/struktural', [StrukturalController::class, 'index'])->name('struktural');

@@ -130,7 +130,7 @@ class PegawaiController extends Controller
         } catch (\Illuminate\Database\QueryException $ex) {
             return back()->with('gagal', 'Gagal mengubah pegawai');
         }
-        return redirect('pegawai')->with('success', 'Sukses mengubah pgawai');
+        return redirect('pegawai')->with('success', 'Sukses mengubah pegawai');
     }
 
     /**
