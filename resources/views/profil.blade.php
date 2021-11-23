@@ -29,6 +29,8 @@
                                 <h4 class="text-primary mb-0">{{ Auth::user()->nama }}</h4>
                                 @if (Auth::user()->level == 'pegawai')
                                     <p>{{ $jabatan }}</p>
+                                @else
+                                    <p>Admin</p>
                                 @endif
                             </div>
                             <div class="profile-email px-2 pt-2">
