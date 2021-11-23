@@ -61,7 +61,7 @@ class BidangController extends Controller
         } catch (\Illuminate\Database\QueryException $ex) {
             return back()->with('gagal', 'Gagal menambahkan bidang');
         }
-        return back()->with('success', 'Sukses menambahkan bidang');
+        return redirect()->route('bidang',$id)->with('success', 'Sukses menambahkan bidang');
     }
 
     /**
@@ -117,7 +117,7 @@ class BidangController extends Controller
         } catch (\Illuminate\Database\QueryException $ex) {
             return back()->with('gagal', 'Gagal mengubah bidang');
         }
-        return back()->with('success', 'Sukses mengubah bidang');
+        return redirect()->route('bidang',$id)->with('success', 'Sukses mengubah bidang');
     }
 
     /**

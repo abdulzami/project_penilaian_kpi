@@ -5,17 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Banding extends Model
+class HistoriPenilaianPerformance extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'id_banding';
-  
+    protected $primaryKey = 'id_histori_penilaian_performance';
+
     protected $fillable = [
         'id_penilaian',
-        'alasan',
-        'bukti',
-        'status_banding',
-        'agreement'
+        'id_performance',
+        'realisasi'
     ];
 }

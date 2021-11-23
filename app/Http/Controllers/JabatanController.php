@@ -99,7 +99,7 @@ class JabatanController extends Controller
         } catch (\Illuminate\Database\QueryException $ex) {
             return back()->with('gagal', 'Gagal menambahkan jabatan');
         }
-        return back()->with('success', 'Sukses menambahkan jabatan');
+        return redirect('jabatan')->with('success', 'Sukses menambahkan jabatan');
     }
 
     /**
@@ -165,7 +165,7 @@ class JabatanController extends Controller
         } catch (\Illuminate\Database\QueryException $ex) {
             return back()->with('gagal', 'Gagal mengubah jabatan');
         }
-        return back()->with('success', 'Sukses mengubah jabatan');
+        return redirect('jabatan')->with('success', 'Sukses mengubah jabatan');
     }
 
     /**

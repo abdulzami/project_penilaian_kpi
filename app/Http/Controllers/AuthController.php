@@ -26,7 +26,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($kredensil)) {
             
-            return redirect('home');
+            return redirect('dashboard');
         }
 
         return redirect('/')->with('gagal', 'Username atau password kurang tepat !');

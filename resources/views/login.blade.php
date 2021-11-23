@@ -28,8 +28,8 @@
                                 <line x1="9" y1="9" x2="15" y2="15"></line>
                             </svg>
                             <strong>Error!</strong> {{ session('error') }}
-                            <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i
-                                        class="mdi mdi-close"></i></span>
+                            <button type="button" class="close h-100" data-dismiss="alert"
+                                aria-label="Close"><span><i class="mdi mdi-close"></i></span>
                             </button>
                         </div>
                     @endif
@@ -69,6 +69,10 @@
                             </button>
                         </div>
                     @endif
+                    <center><div class="login-logo mb-3">
+                        <img src="{{ asset('assets/images/barata-few.png') }}" width="250"
+                            class="brand-image img-circle elevation-3 mb-3" alt="..."><br>
+                    </div></center>
                     <div class="authincation-content">
                         <div class="row no-gutters">
                             <div class="col-xl-12">
@@ -108,7 +112,7 @@
                             @elseif(Auth::user()->level == 'admin')
                                 Admin
                             @endif
-                            <a href="{{ route('home') }}"><b>Home<b></a>
+                            <a href="{{ route('dashboard') }}"><b>Dashboard<b></a>
                             <a href="{{ route('logout') }}"><b>Logout<b></a>
                             @csrf
                         </div>

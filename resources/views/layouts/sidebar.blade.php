@@ -2,9 +2,9 @@
     <div class="deznav-scroll">
         <ul class="metismenu" id="menu">
             <li>
-                <a href="{{ route('home') }}" class="ai-icon" aria-expanded="true">
-                    <i class="flaticon-381-home"></i>
-                    <span class="nav-text">Home</span>
+                <a href="{{ route('dashboard') }}" class="ai-icon" aria-expanded="true">
+                    <i class="flaticon-381-networking"></i>
+                    <span class="nav-text">Dashboard</span>
                 </a>
             </li>
             @if (Auth::user()->level == 'admin')
@@ -48,7 +48,7 @@
                     <ul aria-expanded="false">
                         <li><a href="{{ route('belum-dinilai') }}">Belum Dinilai</a></li>
                         <li><a href="{{ route('menunggu-verifikasi') }}">Menunggu Verifikasi</a></li>
-                        <li><a href="#">Banding Penilaian</a></li>
+                        <li><a href="{{route('banding-penilaian')}}">Banding Penilaian</a></li>
                         <li><a href="{{ route('selesai') }}">Selesai</a></li>
                     </ul>
                 </li>
@@ -62,7 +62,7 @@
                 @atasanpenilai
                 <li>
                     <a href="{{ route('approve-penilaian') }}" class="ai-icon" aria-expanded="true">
-                        <i class="flaticon-381-list-1" style="font-size: 24px"></i>
+                        <i class="flaticon-381-list-1"></i>
                         <span class="nav-text">Approve Penilaian</span>
                     </a>
                 </li>

@@ -51,7 +51,7 @@ class StrukturalController extends Controller
         } catch (\Illuminate\Database\QueryException $ex) {
             return back()->with('gagal', 'Gagal menambahkan struktural');
         }
-        return back()->with('success', 'Sukses menambahkan struktural');
+        return redirect('struktural')->with('success', 'Sukses menambahkan struktural');
     }
 
     /**
@@ -103,7 +103,7 @@ class StrukturalController extends Controller
         } catch (\Illuminate\Database\QueryException $ex) {
             return back()->with('gagal', 'Gagal mengubah struktural');
         }
-        return back()->with('success', 'Sukses mengubah struktural');
+        return redirect('struktural')->with('success', 'Sukses mengubah struktural');
     }
 
     /**

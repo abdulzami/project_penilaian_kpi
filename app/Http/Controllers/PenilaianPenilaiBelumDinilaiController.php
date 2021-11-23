@@ -104,7 +104,7 @@ class PenilaianPenilaiBelumDinilaiController extends Controller
             $pperformance->delete();
             return back()->with('gagal', 'Gagal melakukan penilaian kpi performance. Tidak boleh ada yang kosong atau format salah');
         }
-        return back()->with('success', 'Sukses melakukan penilaian kpi performance');
+        return redirect('belum-dinilai')->with('success', 'Sukses melakukan penilaian kpi performance');
     }
 
     public function update_penilaian_kpi_performance(Request $request, $id)
@@ -125,7 +125,7 @@ class PenilaianPenilaiBelumDinilaiController extends Controller
         } catch (\Illuminate\Database\QueryException $ex) {
             return back()->with('gagal', 'Gagal ubah penilaian kpi performance. Tidak boleh ada yang kosong atau format salah');
         }
-        return back()->with('success', 'Sukses ubah penilaian kpi performance');
+        return redirect('belum-dinilai')->with('success', 'Sukses ubah penilaian kpi performance');
     }
     //end performance
 
@@ -173,7 +173,7 @@ class PenilaianPenilaiBelumDinilaiController extends Controller
             $pperilaku->delete();
             return back()->with('gagal', 'Gagal melakukan penilaian kpi perilaku. Tidak boleh ada yang kosong atau format salah');
         }
-        return back()->with('success', 'Sukses melakukan penilaian kpi perilaku');
+        return redirect('belum-dinilai')->with('success', 'Sukses melakukan penilaian kpi perilaku');
     }
 
     public function update_penilaian_kpi_perilaku(Request $request, $id)
@@ -194,7 +194,7 @@ class PenilaianPenilaiBelumDinilaiController extends Controller
         } catch (\Illuminate\Database\QueryException $ex) {
             return back()->with('gagal', 'Gagal ubah penilaian kpi performance. Tidak boleh ada yang kosong atau format salah');
         }
-        return back()->with('success', 'Sukses ubah penilaian kpi performance');
+        return redirect('belum-dinilai')->with('success', 'Sukses ubah penilaian kpi performance');
     }
     //end perilaku
 
@@ -225,7 +225,7 @@ class PenilaianPenilaiBelumDinilaiController extends Controller
         } catch (\Illuminate\Database\QueryException $ex) {
             return back()->with('gagal', 'Gagal ubah catatan penting');
         }
-        return back()->with('success', 'Sukses ubah catatan penting');
+        return redirect('belum-dinilai')->with('success', 'Sukses ubah catatan penting');
     }
 
     public function approve_to_menunggu_verifikasi($id)
@@ -260,7 +260,7 @@ class PenilaianPenilaiBelumDinilaiController extends Controller
             } catch (\Illuminate\Database\QueryException $ex) {
                 return back()->with('gagal', 'Gagal aprrove penilaian');
             }
-            return back()->with('success', 'Sukses aprrove penilaian');
+            return redirect('menunggu-verifikasi')->with('success', 'Sukses aprrove penilaian');
         }else{
             return back()->with('gagal', 'Gagal aprrove penilaian');
         }

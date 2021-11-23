@@ -1,36 +1,33 @@
 @extends('layouts.master')
 
 @push('custom-css')
-    <link href="{{ asset('assets/vendor/datatables/css/jquery.dataTables.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assets/vendor/toastr/css/toastr.min.css') }}">
 @endpush
-
 @section('content-header')
     <div class="row page-titles mx-0">
         <div class="col-sm-6 p-md-0">
             <div class="welcome-text">
-                <h4>KPI Perfomance {{ $nama_jabatan }}</h4>
+                <h4>Banding Penilaian Edit KPI Performance</h4>
             </div>
         </div>
         <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('jabatan') }}">Jabatan</a></li>
-                <li class="breadcrumb-item active">Manajemen KPI Perfomance</li>
+                <li class="breadcrumb-item"><a href="{{ route('banding-penilaian') }}">Banding Penilaian</a></li>
+                <li class="breadcrumb-item active">Edit KPI Performance - {{ $pegawai->npk }} - {{ $pegawai->nama }}</li>
             </ol>
         </div>
     </div>
 @endsection
 @section('content')
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Data KPI Performance</h4>
-                    <a href="{{ route('create-kpiperformance', $id) }}"><button type="button"
-                            class="btn btn-xs mb-3 btn-primary mb-1">Tambah
-                            Data</button></a>
-                </div>
-                <div class="card-body">
+    <div class="card col-xl-12">
+        <div class="card-header">
+            <h4 class="card-title">Form Edit KPI Performance</h4>
+        </div>
+        <div class="card-body">
+            <div class="basic-form">
+                <form action="{{route('bp-update-kpi-performance-sp',$id)}}" method="post">
+                    @csrf
+                    @method('put')
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
@@ -40,72 +37,48 @@
                                     <th>Tipe Performance</th>
                                     <th>Indikator KPI</th>
                                     <th>Definisi</th>
-                                    <th>Satuan</th>
                                     <th>Target</th>
                                     <th>Bobot</th>
-                                    <th>Action</th>
+                                    <th>Realisasi</th>
+                                    <th>Satuan</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @if ($kpiperformances->isEmpty())
-                                    <tr>
-                                        <td colspan="8" class="text-center">No data available in table</td>
-                                    </tr>
-                                @endif
-                                @foreach ($kpiperformances as $index => $kpip)
+                                @foreach ($penilaianperformance as $index => $kpip)
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ $kpip->kategori }}</td>
                                         <td>{{ $kpip->tipe_performance }}</td>
                                         <td>{{ $kpip->indikator_kpi }}</td>
                                         <td>{{ $kpip->definisi }}</td>
-                                        <td>{{ $kpip->satuan }}</td>
-                                        <td>{{ $kpip->target }}</td>
-                                        <td>{{ $kpip->bobot }}</td>
+                                        <td>{{ $kpip->target }} {{ $kpip->satuan }}</td>
+                                        <td>{{ $kpip->bobot }} %</td>
                                         <td>
-                                            <a href="{{ route('edit-kpiperformance', [$hash->encode($kpip->id_jabatan), $hash->encode($kpip->id_performance)]) }}"
-                                                class="btn btn-xs btn-info mb-1">Edit</a>
-                                            <a href="#" class="btn btn-xs btn-danger mb-1 swall-yeah"
-                                                data-id="{{ $hash->encode($kpip->id_performance) }}">
-                                                <form
-                                                    action="{{ route('delete-kpiperformance', [$hash->encode($kpip->id_jabatan), $hash->encode($kpip->id_performance)]) }}"
-                                                    id="delete{{ $hash->encode($kpip->id_performance) }}" method="post">
-                                                    @method('delete')
-                                                    @csrf
-                                                </form>
-                                                Delete
-                                            </a>
+                                            @if ($kpip->satuan == '%')
+                                                <input type="number"
+                                                    name="{{ $id }}{{ $hash->encode($kpip->id_performance) }}"
+                                                    value="{{$kpip->realisasi}}"
+                                                    class="form-control">
+                                            @else
+                                                <input type="text"
+                                                    name="{{ $id }}{{ $hash->encode($kpip->id_performance) }}"
+                                                    class="form-control" value="{{$kpip->realisasi}}">
+                                            @endif
                                         </td>
+                                        <td>{{ $kpip->satuan }}</td>
                                     </tr>
                                 @endforeach
-                                <tr>
-                                    <th colspan="7"></th>
-                                    <th >Total Bobot :
-                                        @if ($total_bobot != 100)
-                                            <span class="badge light badge-warning">{{ $total_bobot }}</span>
-                                        @else
-                                            <span class="badge light badge-primary">{{ $total_bobot }}</span>
-                                        @endif
-                                    </th>
-                                    <th></th>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
-                </div>
+                    <center> <button type="submit" class="btn btn-sm btn-primary mt-3">Setujui Banding dan Simpan</button> </center>
+                </form>
             </div>
         </div>
     </div>
 @endsection
 @push('custom-script')
-
-    <script src="{{ asset('assets/vendor/datatables/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('assets/js/plugins-init/datatables.init.js') }}"></script>
-    <script src={{ asset('assets/vendor/sweetalert2/sweetalert2.all.js') }}></script>
     <script src="{{ asset('assets/vendor/toastr/js/toastr.min.js') }}"></script>
-
-    <!-- All init script -->
-    <script src="{{ asset('assets/js/plugins-init/toastr-init.js') }}"></script>
     @if (session('success'))
         <script>
             toastr.success('{{ session('success') }}', 'Sukses', {
@@ -179,22 +152,4 @@
             });
         </script>
     @endif
-    <script>
-        $(".swall-yeah").click(function(e) {
-            let id = e.target.dataset.id;
-            Swal.fire({
-                title: 'Apakah anda yakin ingin menghapus data ini ?',
-                text: "Anda tidak akan bisa mengembalikan nya!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, hapus !'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $('#delete' + id).submit();
-                }
-            })
-        })
-    </script>
 @endpush

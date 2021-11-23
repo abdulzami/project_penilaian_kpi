@@ -38,7 +38,6 @@
                                     <th>Total</th>
                                     {{-- <th>Kinerja</th> --}}
                                     <th style="width: 100px">Capaian</th>
-                                    <th>Catatan Penting</th>
                                     <th>Keterangan</th>
                                     <th>Action</th>
                                 </tr>
@@ -55,44 +54,34 @@
                                         {{-- <td></td> --}}
                                         <td>{{ $dinilai->capaian }}</td>
                                         <td>
-                                            @if ($dinilai->catatan_penting == null)
-                                                <div class="badge light-md badge-info">Tidak ada catatan penting</div>
-                                            @else
-                                                {{ $dinilai->catatan_penting }}
-                                            @endif
-
-                                        </td>
-                                        <td>
                                             @if ($dinilai->performance != 0)
-                                                <div class="badge light badge-primary">KPI Performance <i
+                                                <div class="badge badge-xs light badge-primary">KPI Performance <i
                                                         class="fa fa-check"></i></div><br>
                                             @else
-                                                <div class="badge light badge-danger">KPI Performance <i
+                                                <div class="badge badge-xs light badge-danger">KPI Performance <i
                                                         class="fa fa-close"></i></div><br>
                                             @endif
-                                            <br>
                                             @if ($dinilai->perilaku != 0)
-                                                <div class="badge light badge-primary">KPI Perilaku <i
+                                                <div class="badge badge-xs light badge-primary">KPI Perilaku <i
                                                         class="fa fa-check"></i></div><br>
                                             @else
-                                                <div class="badge light badge-danger">KPI Perilaku <i
+                                                <div class="badge badge-xs light badge-danger">KPI Perilaku <i
                                                         class="fa fa-close"></i></div><br>
                                             @endif
-                                            <br>
                                             @if ($dinilai->catatan_penting != '')
-                                                <div class="badge light badge-primary">Catatan Penting <i
+                                                <div class="badge badge-xs light badge-primary">Catatan Penting <i
                                                         class="fa fa-check"></i></div>
                                             @else
-                                                <div class="badge light badge-warning">Catatan Penting <i
-                                                        class="fa fa-close"></i></div>
+                                                <div class="badge badge-xs light badge-warning">Catatan Penting <i
+                                                        class="fa fa-close"></i></div><br>
                                             @endif
                                         </td>
                                         <td>
                                             @if ($dinilai->catatan_penting == null)
-                                            <a href="#" class="btn btn-xs btn-secondary mb-1 swall-yeah"
+                                                <a href="#" class="btn btn-xs btn-secondary mb-1 swall-yeah"
                                                     data-id="{{ $hash->encode($dinilai->id_penilaian) }}">
                                                     <form
-                                                        action="{{route('approve-penilaian-approve-langsung',$hash->encode($dinilai->id_penilaian))}}"
+                                                        action="{{ route('approve-penilaian-approve-langsung', $hash->encode($dinilai->id_penilaian)) }}"
                                                         id="approve{{ $hash->encode($dinilai->id_penilaian) }}"
                                                         method="post">
                                                         @csrf
@@ -101,10 +90,92 @@
                                                     Approve
                                                 </a>
                                             @else
-                                            <a class="btn btn-xs btn-dark mb-1"
-                                            href="{{route('approve-penilaian-review',$hash->encode($dinilai->id_penilaian))}}">Review</a>
+                                                <a class="btn btn-xs btn-info mb-1"
+                                                    href="{{ route('approve-penilaian-review', $hash->encode($dinilai->id_penilaian)) }}">Review</a>
                                             @endif
-                                            
+
+                                        </td>
+                                    </tr>
+                                @endforeach
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Daftar Membutuhkan Verifikasi dari Banding Penilaian</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="example5" class="display" style="min-width: 845px">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>NPK</th>
+                                    <th>Nama Pegawai</th>
+                                    <th>Jabatan</th>
+                                    <th>Total Sebelum Pengurangan</th>
+                                    <th>Total Sebelum Banding</th>
+                                    <th>Total</th>
+                                    {{-- <th>Kinerja</th> --}}
+                                    <th style="width: 100px">Capaian</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($penilaians2 as $index => $dinilai)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $dinilai->npk }}</td>
+                                        <td>{{ $dinilai->nama }}</td>
+                                        <td>{{ $dinilai->nama_jabatan }} {{ $dinilai->nama_struktural }}
+                                            {{ $dinilai->nama_bidang }}</td>
+                                        @if ($dinilai->total_sebelum_pengurangan == 'no')
+                                            <td>
+                                                <div class="badge badge-xs light badge-info">Tidak ada pengurangan</div>
+                                            </td>
+                                        @else
+                                            <td>{{ $dinilai->total_sebelum_pengurangan }}</td>
+                                        @endif
+
+                                        @if ($dinilai->total_sebelum_banding == 'ditolak')
+                                            <td>
+                                                <div class="badge badge-xs light badge-danger">Banding ditolak</div>
+                                            </td>
+                                        @elseif($dinilai->total_sebelum_banding == 'belum_diajukan')
+                                            <td>
+                                                <div class="badge badge-xs light badge-info">Belum diajukan</div>
+                                            </td>
+                                        @elseif($dinilai->total_sebelum_banding == 'proses')
+                                            <td>
+                                                <div class="badge badge-xs light badge-info">Proses</div>
+                                            </td>
+                                        @elseif($dinilai->total_sebelum_banding == 'tidak_banding')
+                                            <td>
+                                                <div class="badge badge-xs light badge-info">Tidak melakukan banding</div>
+                                            </td>
+                                        @else
+                                            <td>{{ $dinilai->total_sebelum_banding }}</td>
+                                        @endif
+                                        <td>{{ $dinilai->total }}</td>
+                                        {{-- <td></td> --}}
+                                        <td>{{ $dinilai->capaian }}</td>
+                                        <td>
+                                            <a href="#" class="btn btn-xs btn-secondary mb-1 swall-yeah"
+                                                data-id="{{ $hash->encode($dinilai->id_penilaian) }}">
+                                                <form
+                                                    action="{{ route('approve-banding-penilaian', $hash->encode($dinilai->id_penilaian)) }}"
+                                                    id="approve{{ $hash->encode($dinilai->id_penilaian) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('put')
+                                                </form>
+                                                Approve
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach
