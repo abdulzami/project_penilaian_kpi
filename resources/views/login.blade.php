@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>{{ $judul }} - KPI - PT Barata Indonesia Persero</title>
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/images/favicon.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/images/kpi.png') }}">
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
 
 </head>
