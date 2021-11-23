@@ -46,9 +46,9 @@
                                         <td>{{ $bidang->nama_bidang }}</td>
                                         <td>
 
-                                            <a class="btn btn-xs btn-info mb-1"
-                                                href="{{ route('edit-bidang', [$hash->encode($bidang->id_struktural), $hash->encode($bidang->id_bidang)]) }}">Edit</a>
-                                            <a href="#" class="btn btn-xs btn-danger mb-1 swall-yeah"
+                                            <a class="btn btn-xs btn-info px-2 mb-1"
+                                                href="{{ route('edit-bidang', [$hash->encode($bidang->id_struktural), $hash->encode($bidang->id_bidang)]) }}"><i class="fa fa-pencil"></i></a>
+                                            <a href="#" class="btn btn-xs btn-danger px-2 mb-1"
                                                 data-id="{{ $hash->encode($bidang->id_bidang) }}">
                                                 <form
                                                     action="{{ route('delete-bidang', [$hash->encode($bidang->id_struktural), $hash->encode($bidang->id_bidang)]) }}"
@@ -56,7 +56,7 @@
                                                     @method('delete')
                                                     @csrf
                                                 </form>
-                                                Delete
+                                                <i class="fa fa-trash"></i>
                                             </a>
                                         </td>
                                     </tr>
@@ -74,7 +74,7 @@
 
     <script src="{{ asset('assets/vendor/datatables/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins-init/datatables.init.js') }}"></script>
-    <script src={{ asset('assets/vendor/sweetalert2/sweetalert2.all.js') }}></script>
+    <script src="{{ asset('assets/vendor/sweetalert2/sweetalert2.all.js') }}"></script>
     <script src="{{ asset('assets/vendor/toastr/js/toastr.min.js') }}"></script>
 
     <!-- All init script -->

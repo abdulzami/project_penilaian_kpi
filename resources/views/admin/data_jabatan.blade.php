@@ -70,15 +70,15 @@
                                         @endif --}}
                                         <td>
                                             @if ($jabatan->id_penilai)
-                                                <a class="btn btn-xs btn-secondary mb-1"
+                                                <a class="btn btn-xs btn-success mb-1"
                                                     href="{{ route('kpiperformance', $hash->encode($jabatan->id_jabatan)) }}">KPI
                                                     Performance</a>
                                             @endif
-                                            <a class="btn btn-xs btn-secondary mb-1"
+                                            <a class="btn btn-xs btn-primary mb-1"
                                                 href="{{ route('hirarki-jabatan', $hash->encode($jabatan->id_jabatan)) }}">Hirarki</a>
-                                            <a class="btn btn-xs btn-info mb-1"
-                                                href="{{ route('edit-jabatan', $hash->encode($jabatan->id_jabatan)) }}">Edit</a>
-                                            <a href="#" class="btn btn-xs btn-danger mb-1 swall-yeah"
+                                            <a class="btn btn-xs btn-info px-2 mb-1"
+                                                href="{{ route('edit-jabatan', $hash->encode($jabatan->id_jabatan)) }}"><i class="fa fa-pencil"></i></a>
+                                            <a href="#" class="btn btn-xs btn-danger px-2 mb-1"
                                                 data-id="{{ $hash->encode($jabatan->id_jabatan) }}">
                                                 <form
                                                     action="{{ route('delete-jabatan', $hash->encode($jabatan->id_jabatan)) }}"
@@ -86,7 +86,7 @@
                                                     @method('delete')
                                                     @csrf
                                                 </form>
-                                                Delete
+                                                <i class="fa fa-trash"></i>
                                             </a>
                                         </td>
                                     </tr>

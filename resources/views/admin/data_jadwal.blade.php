@@ -51,9 +51,9 @@
                                         <td>{{ date('d-M-Y', strtotime($jadwal->tanggal_akhir)) }}</td>
                                         <td>
 
-                                            <a class="btn btn-xs btn-info mb-1"
-                                                href="{{ route('edit-jadwal', $hash->encode($jadwal->id_jadwal)) }}">Edit</a>
-                                            <a href="#" class="btn btn-xs btn-danger mb-1 swall-yeah"
+                                            <a class="btn btn-xs btn-info px-2 mb-1"
+                                                href="{{ route('edit-jadwal', $hash->encode($jadwal->id_jadwal)) }}"><i class="fa fa-pencil"></i></a>
+                                            <a href="#" class="btn btn-xs btn-danger px-2 mb-1"
                                                 data-id="{{ $hash->encode($jadwal->id_jadwal) }}">
                                                 <form
                                                     action="{{ route('delete-jadwal', $hash->encode($jadwal->id_jadwal)) }}"
@@ -62,7 +62,7 @@
                                                     @method('delete')
                                                     @csrf
                                                 </form>
-                                                Delete
+                                                <i class="fa fa-trash"></i>
                                             </a>
                                         </td>
                                     </tr>
