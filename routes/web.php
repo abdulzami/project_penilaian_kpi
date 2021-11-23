@@ -16,6 +16,7 @@ use App\Http\Controllers\PenilaianPenilaiBelumDinilaiController;
 use App\Http\Controllers\PenilaianPenilaiMenungguVerifikasi;
 use App\Http\Controllers\PenilaianPenilaiSelesai;
 use App\Http\Controllers\ProfilController;
+use App\Http\Controllers\RekapController;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
@@ -108,6 +109,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/kpi-perilaku', [KpiperilakuController::class, 'index'])->name('kpiperilaku');
         //end kpi perilaku
 
+        //start rekap penilaian
+        Route::get('/rekap-penilaian', [RekapController::class, 'index'])->name('rekap-penilaian');
+        Route::post('/rekap-penilaian/filtered', [RekapController::class, 'filtered'])->name('rekap-penilaian-filtered');
+        //end rekap penilaian
+
     });
     Route::group(['middleware' => ['cek_login:pegawai', 'cek_atasanpenilai:ya', 'cek_berlangsung:ya']], function () {
         Route::get('/approve-penilaian', [ApprovePenilaianController::class, 'show_approve_penilaian'])->name('approve-penilaian');
@@ -149,7 +155,6 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::put('/banding-penilaian/{id}/review-pengajuan/tolak-pengajuan', [PenilaianPenilaiBandingController::class, 'tolak_pengajuan'])->name('bp-tolak-pengajuan');
             });
             //end banding penilaian
-
 
             //start menunggu verifikasi
             Route::get('/menunggu-verifikasi', [PenilaianPenilaiMenungguVerifikasi::class, 'show_menunggu_verifikasi'])->name('menunggu-verifikasi');

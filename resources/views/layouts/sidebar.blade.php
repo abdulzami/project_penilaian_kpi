@@ -38,6 +38,12 @@
                         <span class="nav-text">Jadwal Penilaian</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('rekap-penilaian') }}" class="ai-icon" aria-expanded="false">
+                        <i class="flaticon-381-file-1"></i>
+                        <span class="nav-text">Rekap Penilaian</span>
+                    </a>
+                </li>
             @endif
             @if (Auth::user()->level == 'pegawai')
                 @penilai

@@ -12,12 +12,18 @@ class ProfilController extends Controller
 {
     public function index()
     {
-        $all = Jabatan::select('nama_jabatan', 'nama_struktural', 'nama_bidang')->join('bidangs', 'bidangs.id_bidang', '=', 'jabatans.id_bidang')
-            ->join('strukturals', 'strukturals.id_struktural', '=', 'bidangs.id_struktural')->where('jabatans.id_jabatan', Auth::user()->id_jabatan)->get();
-        $all = $all[0];
-        $jabatan = $all->nama_jabatan . " " . $all->nama_struktural . " " . $all->nama_bidang;
 
-        return view('profil', compact('jabatan'));
+
+        if (Auth::user()->level = 'admin') {
+            return view('profil');
+        } else {
+            $all = Jabatan::select('nama_jabatan', 'nama_struktural', 'nama_bidang')->join('bidangs', 'bidangs.id_bidang', '=', 'jabatans.id_bidang')
+                ->join('strukturals', 'strukturals.id_struktural', '=', 'bidangs.id_struktural')->where('jabatans.id_jabatan', Auth::user()->id_jabatan)->get();
+            $all = $all[0];
+            $jabatan = $all->nama_jabatan . " " . $all->nama_struktural . " " . $all->nama_bidang;
+            return view('profil', compact('jabatan'));
+        }
+       
     }
 
     public function ganti_password(Request $request)

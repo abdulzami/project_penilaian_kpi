@@ -40,14 +40,14 @@ class DashboardController extends Controller
         }
 
         foreach ($jabatanapasaja as $id_jabatan) {
-            $ap =new ApprovePenilaianController();
+            $ap = new ApprovePenilaianController();
             $penilaian_need_approve = $ap->get_need_approve($id_jabatan);
             if ($penilaian_need_approve->isEmpty()) {
             } else {
                 array_push($penilaians, $penilaian_need_approve[0]);
             }
         }
-        
+
         return $penilaians;
     }
 
@@ -121,57 +121,60 @@ class DashboardController extends Controller
                 $penilaian = "";
                 $kpiperformances = "";
             }
-            
-            $belum_dinilai = Jabatan::select('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
-            ->join('users', 'jabatans.id_jabatan', '=', 'users.id_jabatan')
-            ->join('bidangs', 'jabatans.id_bidang', '=', 'bidangs.id_bidang')
-            ->join('strukturals', 'bidangs.id_struktural', 'strukturals.id_struktural')
-            ->join('penilaians', 'users.id_user', '=', 'penilaians.id_pegawai')
-            ->where('jabatans.id_penilai',  Auth::user()->id_jabatan)
-            ->where('penilaians.status_penilaian', 'belum_dinilai')
-            ->where('penilaians.id_jadwal', $jadwal[0]->id_jadwal)
-            ->groupBy('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.id_jadwal', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
-            ->count();
 
-            $menunggu_verifikasi = Jabatan::select('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
-            ->join('users', 'jabatans.id_jabatan', '=', 'users.id_jabatan')
-            ->join('bidangs', 'jabatans.id_bidang', '=', 'bidangs.id_bidang')
-            ->join('strukturals', 'bidangs.id_struktural', 'strukturals.id_struktural')
-            ->join('penilaians', 'users.id_user', '=', 'penilaians.id_pegawai')
-            ->where('jabatans.id_penilai',  Auth::user()->id_jabatan)
-            ->where('penilaians.status_penilaian', 'menunggu_verifikasi')
-            ->where('penilaians.id_jadwal', $jadwal[0]->id_jadwal)
-            ->groupBy('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.id_jadwal', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
-            ->count();
+            if (!$jadwal->isEmpty()) {
+                $belum_dinilai = Jabatan::select('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
+                    ->join('users', 'jabatans.id_jabatan', '=', 'users.id_jabatan')
+                    ->join('bidangs', 'jabatans.id_bidang', '=', 'bidangs.id_bidang')
+                    ->join('strukturals', 'bidangs.id_struktural', 'strukturals.id_struktural')
+                    ->join('penilaians', 'users.id_user', '=', 'penilaians.id_pegawai')
+                    ->where('jabatans.id_penilai',  Auth::user()->id_jabatan)
+                    ->where('penilaians.status_penilaian', 'belum_dinilai')
+                    ->where('penilaians.id_jadwal', $jadwal[0]->id_jadwal)
+                    ->groupBy('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.id_jadwal', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
+                    ->count();
 
-            $selesai = Jabatan::select('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
-            ->join('users', 'jabatans.id_jabatan', '=', 'users.id_jabatan')
-            ->join('bidangs', 'jabatans.id_bidang', '=', 'bidangs.id_bidang')
-            ->join('strukturals', 'bidangs.id_struktural', 'strukturals.id_struktural')
-            ->join('penilaians', 'users.id_user', '=', 'penilaians.id_pegawai')
-            ->where('jabatans.id_penilai',  Auth::user()->id_jabatan)
-            ->where('penilaians.status_penilaian', 'selesai')
-            ->where('penilaians.id_jadwal', $jadwal[0]->id_jadwal)
-            ->groupBy('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.id_jadwal', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
-            ->count();
-            
-            $banding_penilaian = Jabatan::select('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
-            ->join('users', 'jabatans.id_jabatan', '=', 'users.id_jabatan')
-            ->join('bidangs', 'jabatans.id_bidang', '=', 'bidangs.id_bidang')
-            ->join('strukturals', 'bidangs.id_struktural', 'strukturals.id_struktural')
-            ->join('penilaians', 'users.id_user', '=', 'penilaians.id_pegawai')
-            ->where('jabatans.id_penilai',  Auth::user()->id_jabatan)
-            ->where('penilaians.status_penilaian', 'terverifikasi')
-            ->where('penilaians.id_jadwal', $jadwal[0]->id_jadwal)
-            ->groupBy('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.id_jadwal', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
-            ->count();
-            try{
-                $membutuhkan_verifikasi = $this->show_approve_penilaian();
-            }catch(ErrorException $e){
-                $membutuhkan_verifikasi = "";
+                $menunggu_verifikasi = Jabatan::select('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
+                    ->join('users', 'jabatans.id_jabatan', '=', 'users.id_jabatan')
+                    ->join('bidangs', 'jabatans.id_bidang', '=', 'bidangs.id_bidang')
+                    ->join('strukturals', 'bidangs.id_struktural', 'strukturals.id_struktural')
+                    ->join('penilaians', 'users.id_user', '=', 'penilaians.id_pegawai')
+                    ->where('jabatans.id_penilai',  Auth::user()->id_jabatan)
+                    ->where('penilaians.status_penilaian', 'menunggu_verifikasi')
+                    ->where('penilaians.id_jadwal', $jadwal[0]->id_jadwal)
+                    ->groupBy('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.id_jadwal', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
+                    ->count();
+
+                $selesai = Jabatan::select('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
+                    ->join('users', 'jabatans.id_jabatan', '=', 'users.id_jabatan')
+                    ->join('bidangs', 'jabatans.id_bidang', '=', 'bidangs.id_bidang')
+                    ->join('strukturals', 'bidangs.id_struktural', 'strukturals.id_struktural')
+                    ->join('penilaians', 'users.id_user', '=', 'penilaians.id_pegawai')
+                    ->where('jabatans.id_penilai',  Auth::user()->id_jabatan)
+                    ->where('penilaians.status_penilaian', 'selesai')
+                    ->where('penilaians.id_jadwal', $jadwal[0]->id_jadwal)
+                    ->groupBy('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.id_jadwal', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
+                    ->count();
+
+                $banding_penilaian = Jabatan::select('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
+                    ->join('users', 'jabatans.id_jabatan', '=', 'users.id_jabatan')
+                    ->join('bidangs', 'jabatans.id_bidang', '=', 'bidangs.id_bidang')
+                    ->join('strukturals', 'bidangs.id_struktural', 'strukturals.id_struktural')
+                    ->join('penilaians', 'users.id_user', '=', 'penilaians.id_pegawai')
+                    ->where('jabatans.id_penilai',  Auth::user()->id_jabatan)
+                    ->where('penilaians.status_penilaian', 'terverifikasi')
+                    ->where('penilaians.id_jadwal', $jadwal[0]->id_jadwal)
+                    ->groupBy('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.id_jadwal', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
+                    ->count();
+                try {
+                    $membutuhkan_verifikasi = $this->show_approve_penilaian();
+                } catch (ErrorException $e) {
+                    $membutuhkan_verifikasi = "";
+                }
+                return view('pegawai.dashboard', compact('nama_periode', 'menunggu_verifikasi', 'belum_dinilai', 'selesai', 'banding_penilaian', 'penilaian', 'membutuhkan_verifikasi', 'kpiperformances', 'hash'));
+            }else{
+                return view('pegawai.dashboard');
             }
-            
-            return view('pegawai.dashboard', compact('nama_periode','menunggu_verifikasi','belum_dinilai','selesai','banding_penilaian', 'penilaian','membutuhkan_verifikasi', 'kpiperformances', 'hash'));
         } else {
             return redirect('/')->with('error', 'Anda tidak punya akses !');
         }
