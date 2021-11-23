@@ -62,9 +62,9 @@
                                                 </form>
                                                 Reset Password
                                             </a>
-                                            <a class="btn btn-xs btn-info mb-1"
-                                                href="{{ route('edit-pegawai', $hash->encode($pegawai->id_user)) }}">Edit</a>
-                                            <a href="#" class="btn btn-xs btn-danger mb-1 swall-yeah"
+                                            <a class="btn btn-xs btn-info px-2 mb-1"
+                                                href="{{ route('edit-pegawai', $hash->encode($pegawai->id_user)) }}"><i class="fa fa-pencil"></i></a>
+                                            <a href="#" class="btn btn-xs btn-danger px-2 mb-1"
                                                 data-id="{{ $hash->encode($pegawai->id_user) }}">
                                                 <form
                                                     action="{{ route('delete-pegawai', $hash->encode($pegawai->id_user)) }}"
@@ -73,7 +73,7 @@
                                                     @method('delete')
                                                     @csrf
                                                 </form>
-                                                Delete
+                                                <i class="fa fa-trash"></i>
                                             </a>
                                         </td>
                                     </tr>

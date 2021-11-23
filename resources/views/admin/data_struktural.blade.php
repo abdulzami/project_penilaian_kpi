@@ -46,11 +46,11 @@
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ $struktural->nama_struktural }}</td>
                                         <td>
-                                            <a class="btn btn-xs btn-secondary mb-1"
+                                            <a class="btn btn-xs btn-primary mb-1"
                                             href="{{ route('bidang', $hash->encode($struktural->id_struktural)) }}">Bidang</a>
-                                            <a class="btn btn-xs btn-info mb-1"
-                                                href="{{ route('edit-struktural', $hash->encode($struktural->id_struktural)) }}">Edit</a>
-                                            <a href="#" class="btn btn-xs btn-danger mb-1 swall-yeah"
+                                            <a class="btn btn-xs btn-info px-2 mb-1"
+                                                href="{{ route('edit-struktural', $hash->encode($struktural->id_struktural)) }}"><i class="fa fa-pencil"></i></a>
+                                            <a href="#" class="btn btn-xs btn-danger px-2 mb-1"
                                                 data-id="{{ $hash->encode($struktural->id_struktural) }}">
                                                 <form
                                                     action="{{ route('delete-struktural', $hash->encode($struktural->id_struktural)) }}"
@@ -59,7 +59,7 @@
                                                     @method('delete')
                                                     @csrf
                                                 </form>
-                                                Delete
+                                                <i class="fa fa-trash"></i>
                                             </a>
                                         </td>
                                     </tr>

@@ -64,8 +64,8 @@
                                         <td>{{ $kpip->bobot }}</td>
                                         <td>
                                             <a href="{{ route('edit-kpiperformance', [$hash->encode($kpip->id_jabatan), $hash->encode($kpip->id_performance)]) }}"
-                                                class="btn btn-xs btn-info mb-1">Edit</a>
-                                            <a href="#" class="btn btn-xs btn-danger mb-1 swall-yeah"
+                                                class="btn btn-xs btn-info px-2 mb-1"><i class="fa fa-pencil"></i></a>
+                                            <a href="#" class="btn btn-xs btn-danger px-2 mb-1"
                                                 data-id="{{ $hash->encode($kpip->id_performance) }}">
                                                 <form
                                                     action="{{ route('delete-kpiperformance', [$hash->encode($kpip->id_jabatan), $hash->encode($kpip->id_performance)]) }}"
@@ -73,7 +73,7 @@
                                                     @method('delete')
                                                     @csrf
                                                 </form>
-                                                Delete
+                                                <i class="fa fa-trash"></i>
                                             </a>
                                         </td>
                                     </tr>
