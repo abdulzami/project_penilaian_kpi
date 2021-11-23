@@ -89,7 +89,7 @@
                                                 href="{{ route('belum-dinilai-catatan-penting', $hash->encode($dinilai->id_penilaian)) }}">Catatan
                                                 Penting</a>
                                             @if ($dinilai->perilaku != 0 && $dinilai->performance != 0)
-                                                <a href="#" class="btn btn-xs btn-secondary mb-1 swall-yeah"
+                                                <a href="#" class="btn btn-xs btn-success mb-1 swall-yeah"
                                                     data-id="{{ $hash->encode($dinilai->id_penilaian) }}">
                                                     <form
                                                         action="{{ route('belum-dinilai-approve', $hash->encode($dinilai->id_penilaian)) }}"
