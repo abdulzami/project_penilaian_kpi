@@ -65,7 +65,7 @@
                                         <td>
                                             <a href="{{ route('edit-kpiperformance', [$hash->encode($kpip->id_jabatan), $hash->encode($kpip->id_performance)]) }}"
                                                 class="btn btn-xs btn-info px-2 mb-1"><i class="fa fa-pencil"></i></a>
-                                            <a href="#" class="btn btn-xs btn-danger px-2 mb-1"
+                                            <a href="#" class="btn btn-xs btn-danger px-2 mb-1 swall-yeah"
                                                 data-id="{{ $hash->encode($kpip->id_performance) }}">
                                                 <form
                                                     action="{{ route('delete-kpiperformance', [$hash->encode($kpip->id_jabatan), $hash->encode($kpip->id_performance)]) }}"
@@ -101,7 +101,7 @@
 
     <script src="{{ asset('assets/vendor/datatables/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins-init/datatables.init.js') }}"></script>
-    <script src={{ asset('assets/vendor/sweetalert2/sweetalert2.all.js') }}></script>
+    <script src="{{ asset('assets/vendor/sweetalert2/sweetalert2.all.js') }}"></script>
     <script src="{{ asset('assets/vendor/toastr/js/toastr.min.js') }}"></script>
 
     <!-- All init script -->

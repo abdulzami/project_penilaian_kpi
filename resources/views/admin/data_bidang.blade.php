@@ -48,7 +48,7 @@
 
                                             <a class="btn btn-xs btn-info px-2 mb-1"
                                                 href="{{ route('edit-bidang', [$hash->encode($bidang->id_struktural), $hash->encode($bidang->id_bidang)]) }}"><i class="fa fa-pencil"></i></a>
-                                            <a href="#" class="btn btn-xs btn-danger px-2 mb-1"
+                                            <a href="#" class="btn btn-xs btn-danger px-2 mb-1 swall-yeah"
                                                 data-id="{{ $hash->encode($bidang->id_bidang) }}">
                                                 <form
                                                     action="{{ route('delete-bidang', [$hash->encode($bidang->id_struktural), $hash->encode($bidang->id_bidang)]) }}"
