@@ -106,6 +106,22 @@
     <script src="{{ asset('assets/js/deznav-init.js') }}"></script>
 
     @stack('custom-script')
+    <script>
+        $(".swall-logout").click(function() {
+            Swal.fire({
+                title: 'Apakah anda yakin ingin logout?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, logout !'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#logout-form').submit();
+                }
+            })
+        })
+    </script>
 </body>
 
 </html>

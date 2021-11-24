@@ -170,8 +170,8 @@
         </script>
     @endif
     <script>
-        $(".swall-yeah").click(function(e) {
-            let id = e.target.dataset.id;
+        $(".swall-yeah").click(function() {
+            let id = $(this).data('id') 
             Swal.fire({
                 title: 'Apakah anda yakin ingin menghapus data ini ?',
                 text: "Anda tidak akan bisa mengembalikan nya!",
