@@ -113,8 +113,6 @@
                                 Admin
                             @endif
                             <a href="{{ route('dashboard') }}"><b>Dashboard<b></a>
-                            <a href="{{ route('logout') }}"><b>Logout<b></a>
-                            @csrf
                         </div>
                     @endif
                 </div>
