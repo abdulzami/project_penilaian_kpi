@@ -26,7 +26,8 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Data Jabatan</h4>
-                    <a href="{{ route('create-jabatan') }}"><button type="button" class="btn btn-xs mb-3 btn-primary mb-1">Tambah
+                    <a href="{{ route('create-jabatan') }}"><button type="button"
+                            class="btn btn-xs mb-3 btn-primary mb-1">Tambah
                             Data</button></a>
                 </div>
                 <div class="card-body">
@@ -49,35 +50,29 @@
                                         <td>
                                             @if ($jabatan->id_penilai)
                                                 @if ($jabatan->total_bobot_jabatan == 100)
-                                                    <span class="badge light badge-success">Total bobot kpi performance :
-                                                        100. Sudah siap
-                                                        dilakukan penilaian</span>
+                                                    Bobot KPI Performance :
+                                                    <span class="badge light badge-primary">100</span> 
                                                 @else
-                                                    <span class="badge light badge-warning">Total bobot kpi performance :
-                                                        {{ $jabatan->total_bobot_jabatan == null ? 0 : $jabatan->total_bobot_jabatan }}.
-                                                        Belum siap dilakukan
-                                                        penilaian</span>
+                                                    Bobot KPI Performance :
+                                                    <span class="badge light badge-warning">{{ $jabatan->total_bobot_jabatan == null ? 0 : $jabatan->total_bobot_jabatan }}
+                                                    </span>
                                                 @endif
                                             @else
-                                                <span class="badge light badge-dark">Tidak mempunyai penilai</span>
+                                                Tidak mempunyai penilai
                                             @endif
 
                                         </td>
-                                        {{-- @if ($jabatan->nama_penilai == null)
-                                            <td> <span class="badge light-xs badge-danger">Tidak ada penilainya</span></td>
-                                        @else
-                                            <td>{{ $jabatan->nama_penilai }} {{ $jabatan->nama_struktural_penilai }} {{ $jabatan->nama_bidang_penilai }}</td>
-                                        @endif --}}
                                         <td>
                                             @if ($jabatan->id_penilai)
-                                                <a class="btn btn-xs btn-success mb-1"
+                                                <a class="btn btn-xs btn-primary mb-1"
                                                     href="{{ route('kpiperformance', $hash->encode($jabatan->id_jabatan)) }}">KPI
                                                     Performance</a>
                                             @endif
                                             <a class="btn btn-xs btn-primary mb-1"
                                                 href="{{ route('hirarki-jabatan', $hash->encode($jabatan->id_jabatan)) }}">Hirarki</a>
                                             <a class="btn btn-xs btn-info px-2 mb-1"
-                                                href="{{ route('edit-jabatan', $hash->encode($jabatan->id_jabatan)) }}"><i class="fa fa-pencil"></i></a>
+                                                href="{{ route('edit-jabatan', $hash->encode($jabatan->id_jabatan)) }}"><i
+                                                    class="fa fa-pencil"></i></a>
                                             <a href="#" class="btn btn-xs btn-danger px-2 mb-1 swall-yeah"
                                                 data-id="{{ $hash->encode($jabatan->id_jabatan) }}">
                                                 <form
@@ -184,7 +179,7 @@
     @endif
     <script>
         $(".swall-yeah").click(function() {
-            let id = $(this).data('id') 
+            let id = $(this).data('id')
             Swal.fire({
                 title: 'Apakah anda yakin ingin menghapus data ini ?',
                 text: "Anda tidak akan bisa mengembalikan nya!",

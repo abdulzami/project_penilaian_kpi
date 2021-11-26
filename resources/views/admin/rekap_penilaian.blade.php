@@ -62,7 +62,7 @@
                     <h4 class="card-title">Data Penilaian
 
                         @if ($filter == "filter")
-                            <div class="badge badge-info">Filtered</div>
+                           <strong>Filtered</strong> 
                         @endif
                     </h4>
                 </div>

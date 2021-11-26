@@ -70,8 +70,8 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('/jabatan/edit/{id}', [JabatanController::class, 'edit'])->name('edit-jabatan');
             Route::delete('/jabatan/delete/{id}', [JabatanController::class, 'destroy'])->name('delete-jabatan');
             Route::put('/jabatan/update/{id}', [JabatanController::class, 'update'])->name('update-jabatan');
-            Route::get('/jabatan/hirarki/{id}', [JabatanController::class, 'hirarki'])->name('hirarki-jabatan');
         });
+        Route::get('/jabatan/hirarki/{id}', [JabatanController::class, 'hirarki'])->name('hirarki-jabatan');
         //end jabatan
 
         //start kpi-performance
