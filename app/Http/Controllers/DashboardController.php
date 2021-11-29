@@ -44,10 +44,66 @@ class DashboardController extends Controller
             $penilaian_need_approve = $ap->get_need_approve($id_jabatan);
             if ($penilaian_need_approve->isEmpty()) {
             } else {
-                array_push($penilaians, $penilaian_need_approve[0]);
+                array_push($penilaians, $penilaian_need_approve);
             }
         }
 
+        if ($penilaians) {
+            $penilaians_temp = array();
+            array_push($penilaians_temp, $penilaians[0][0]);
+            if (sizeof($penilaians) == 2) {
+                foreach ($penilaians[1] as $di_approve_2) {
+                    array_push($penilaians_temp, $di_approve_2);
+                }
+                $penilaians = $penilaians_temp;
+            }else{
+                $penilaians = $penilaians[0];
+            }
+        }
+        return $penilaians;
+    }
+
+    public function show_approve_penilaian2()
+    {
+        $hash = new Hashids();
+        $jabatanapasaja = array();
+        $penilaians = array();
+        $user = Auth::user();
+        $cek = Jabatan::find($user->id_jabatan);
+        if ($cek->id_penilai == null) {
+            $diapproves = Jabatan::where('id_penilai', $user->id_jabatan)->get();
+            foreach ($diapproves as $diapprove) {
+                array_push($jabatanapasaja, $diapprove->id_jabatan);
+            }
+        }
+
+        $dinilais = Jabatan::where('id_penilai', $user->id_jabatan)->get();
+        foreach ($dinilais as $dinilai) {
+            $jabatans = Jabatan::where('id_penilai', $dinilai->id_jabatan)->get();
+            array_push($jabatanapasaja, $jabatans[0]->id_jabatan);
+        }
+
+        foreach ($jabatanapasaja as $id_jabatan) {
+            $ap = new ApprovePenilaianController();
+            $penilaian_need_approve = $ap->get_need_approve2($id_jabatan);
+            if ($penilaian_need_approve->isEmpty()) {
+            } else {
+                array_push($penilaians, $penilaian_need_approve);
+            }
+        }
+
+        if ($penilaians) {
+            $penilaians_temp = array();
+            array_push($penilaians_temp, $penilaians[0][0]);
+            if (sizeof($penilaians) == 2) {
+                foreach ($penilaians[1] as $di_approve_2) {
+                    array_push($penilaians_temp, $di_approve_2);
+                }
+                $penilaians = $penilaians_temp;
+            }else{
+                $penilaians = $penilaians[0];
+            }
+        }
         return $penilaians;
     }
 
@@ -91,7 +147,7 @@ class DashboardController extends Controller
                     ->get();
                 for ($i = 0; $i < sizeof($penilaian); $i++) {
                     $performances = PenilaianPerformance::select(DB::raw("CASE
-                                WHEN tipe_performance = 'min' AND target>realisasi THEN 100
+                                WHEN tipe_performance = 'min' AND target>realisasi THEN 100*bobot/100
                                 WHEN tipe_performance = 'min' THEN ((target/realisasi)*100)*bobot/100
                                 WHEN tipe_performance = 'max' THEN ((realisasi/target) * 100)*bobot/100
                                 END AS skor"))
@@ -132,7 +188,7 @@ class DashboardController extends Controller
                     ->where('penilaians.status_penilaian', 'belum_dinilai')
                     ->where('penilaians.id_jadwal', $jadwal[0]->id_jadwal)
                     ->groupBy('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.id_jadwal', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
-                    ->count();
+                    ->get()->count();
 
                 $menunggu_verifikasi = Jabatan::select('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
                     ->join('users', 'jabatans.id_jabatan', '=', 'users.id_jabatan')
@@ -143,7 +199,7 @@ class DashboardController extends Controller
                     ->where('penilaians.status_penilaian', 'menunggu_verifikasi')
                     ->where('penilaians.id_jadwal', $jadwal[0]->id_jadwal)
                     ->groupBy('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.id_jadwal', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
-                    ->count();
+                    ->get()->count();
 
                 $selesai = Jabatan::select('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
                     ->join('users', 'jabatans.id_jabatan', '=', 'users.id_jabatan')
@@ -154,7 +210,7 @@ class DashboardController extends Controller
                     ->where('penilaians.status_penilaian', 'selesai')
                     ->where('penilaians.id_jadwal', $jadwal[0]->id_jadwal)
                     ->groupBy('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.id_jadwal', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
-                    ->count();
+                    ->get()->count();
 
                 $banding_penilaian = Jabatan::select('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
                     ->join('users', 'jabatans.id_jabatan', '=', 'users.id_jabatan')
@@ -165,14 +221,20 @@ class DashboardController extends Controller
                     ->where('penilaians.status_penilaian', 'terverifikasi')
                     ->where('penilaians.id_jadwal', $jadwal[0]->id_jadwal)
                     ->groupBy('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.id_jadwal', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
-                    ->count();
+                    ->get()->count();
                 try {
                     $membutuhkan_verifikasi = $this->show_approve_penilaian();
                 } catch (ErrorException $e) {
                     $membutuhkan_verifikasi = "";
                 }
-                return view('pegawai.dashboard', compact('nama_periode', 'menunggu_verifikasi', 'belum_dinilai', 'selesai', 'banding_penilaian', 'penilaian', 'membutuhkan_verifikasi', 'kpiperformances', 'hash'));
-            }else{
+
+                try {
+                    $membutuhkan_verifikasi2 = $this->show_approve_penilaian2();
+                } catch (ErrorException $e) {
+                    $membutuhkan_verifikasi2 = "";
+                }
+                return view('pegawai.dashboard', compact('nama_periode', 'menunggu_verifikasi', 'belum_dinilai', 'selesai', 'banding_penilaian', 'penilaian', 'membutuhkan_verifikasi', 'membutuhkan_verifikasi2', 'kpiperformances', 'hash'));
+            } else {
                 return view('pegawai.dashboard');
             }
         } else {

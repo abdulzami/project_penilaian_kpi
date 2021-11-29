@@ -36,7 +36,7 @@ class ApprovePenilaianController extends Controller
             ->get();
         for ($i = 0; $i < sizeof($penilaian); $i++) {
             $performances = PenilaianPerformance::select(DB::raw("CASE
-                WHEN tipe_performance = 'min' AND target>realisasi THEN 100
+                WHEN tipe_performance = 'min' AND target>realisasi THEN 100*bobot/100
                 WHEN tipe_performance = 'min' THEN ((target/realisasi)*100)*bobot/100
                 WHEN tipe_performance = 'max' THEN ((realisasi/target) * 100)*bobot/100
                 END AS skor"))
@@ -73,7 +73,7 @@ class ApprovePenilaianController extends Controller
             ->get();
         for ($i = 0; $i < sizeof($penilaian); $i++) {
             $performances = PenilaianPerformance::select(DB::raw("CASE
-                WHEN tipe_performance = 'min' AND target>realisasi THEN 100
+                WHEN tipe_performance = 'min' AND target>realisasi THEN 100*bobot/100
                 WHEN tipe_performance = 'min' THEN ((target/realisasi)*100)*bobot/100
                 WHEN tipe_performance = 'max' THEN ((realisasi/target) * 100)*bobot/100
                 END AS skor"))
@@ -81,7 +81,7 @@ class ApprovePenilaianController extends Controller
                 ->where('id_penilaian', $penilaian[$i]->id_penilaian)->get();
 
             $historyperformance = HistoriPenilaianPerformance::select(DB::raw("CASE
-                WHEN tipe_performance = 'min' AND target>realisasi THEN 100
+                WHEN tipe_performance = 'min' AND target>realisasi THEN 100*bobot/100
                 WHEN tipe_performance = 'min' THEN ((target/realisasi)*100)*bobot/100
                 WHEN tipe_performance = 'max' THEN ((realisasi/target) * 100)*bobot/100
                 END AS skor"))
@@ -89,7 +89,7 @@ class ApprovePenilaianController extends Controller
                 ->where('id_penilaian', $penilaian[$i]->id_penilaian)->get();
             $historyperformance = $historyperformance->sum('skor');
             $historyperformance = $historyperformance * 70 / 100;
-            
+
             $performances = $performances->sum('skor');
             $performances = $performances * 70 / 100;
             $perilakus = PenilaianPerilaku::select(DB::raw('SUM(nilai_perilaku *20 * 100/6/100)*30/100 AS skor_akhir'))->where('id_penilaian', $penilaian[$i]->id_penilaian)->get();
@@ -102,17 +102,17 @@ class ApprovePenilaianController extends Controller
                 $penilaian[$i]->total_sebelum_banding = "belum_diajukan";
                 $penilaian[$i]->total = $total;
                 $penilaian[$i]->capaian = $total . "%";
-            }elseif ($penilaian[$i]->pengurangan == null && $penilaian[$i]->status_banding == 'proses') {
+            } elseif ($penilaian[$i]->pengurangan == null && $penilaian[$i]->status_banding == 'proses') {
                 $penilaian[$i]->total_sebelum_pengurangan = "no";
                 $penilaian[$i]->total_sebelum_banding = "proses";
                 $penilaian[$i]->total = $total;
                 $penilaian[$i]->capaian = $total . "%";
-            }elseif ($penilaian[$i]->pengurangan == null && $penilaian[$i]->status_banding == 'diterima_mv') {
+            } elseif ($penilaian[$i]->pengurangan == null && $penilaian[$i]->status_banding == 'diterima_mv') {
                 $penilaian[$i]->total_sebelum_pengurangan = "no";
                 $penilaian[$i]->total_sebelum_banding = $total_histori;
                 $penilaian[$i]->total = $total;
                 $penilaian[$i]->capaian = $total . "%";
-            }elseif ($penilaian[$i]->pengurangan != null && $penilaian[$i]->status_banding == null) {
+            } elseif ($penilaian[$i]->pengurangan != null && $penilaian[$i]->status_banding == null) {
                 $penilaian[$i]->total_sebelum_pengurangan = $total;
                 $penilaian[$i]->total_sebelum_banding = "belum_diajukan";
                 $penilaian[$i]->total = $total - ($total * $penilaian[$i]->pengurangan / 100);
@@ -157,18 +157,46 @@ class ApprovePenilaianController extends Controller
             $penilaian_need_approve = $this->get_need_approve($id_jabatan);
             if ($penilaian_need_approve->isEmpty()) {
             } else {
-                array_push($penilaians, $penilaian_need_approve[0]);
+                array_push($penilaians, $penilaian_need_approve);
             }
+        }
+        
+        if ($penilaians) {
+            $penilaians_temp = array();
+            array_push($penilaians_temp, $penilaians[0][0]);
+            if(sizeof($penilaians) == 2){
+                foreach ($penilaians[1] as $di_approve_2) {
+                    array_push($penilaians_temp, $di_approve_2);
+                }
+                $penilaians = $penilaians_temp;
+            }else{
+                $penilaians = $penilaians[0];
+            }
+            
         }
 
         foreach ($jabatanapasaja as $id_jabatan) {
             $penilaian_need_approve2 = $this->get_need_approve2($id_jabatan);
             if ($penilaian_need_approve2->isEmpty()) {
             } else {
-                array_push($penilaians2, $penilaian_need_approve2[0]);
+                array_push($penilaians2, $penilaian_need_approve2);
             }
         }
         
+        if ($penilaians2) {
+            $penilaians_temp2 = array();
+            array_push($penilaians_temp2, $penilaians2[0][0]);
+            if(sizeof($penilaians2) == 2){
+                foreach ($penilaians2[1] as $di_approve_2_2) {
+                    array_push($penilaians_temp2, $di_approve_2_2);
+                }
+                $penilaians2 = $penilaians_temp2;
+            }else{
+                $penilaians2 = $penilaians2[0];
+            }
+            
+        }
+
         return view('pegawai.atasan_penilai.approve_penilaian', compact('penilaians', 'penilaians2', 'hash'));
     }
 
@@ -179,7 +207,7 @@ class ApprovePenilaianController extends Controller
         $penilaian = Penilaian::select('id_penilaian', 'id_pegawai', 'catatan_penting')->find($id_penilaian);
         for ($i = 0; $i < sizeof($penilaian); $i++) {
             $performances = PenilaianPerformance::select(DB::raw("CASE
-                WHEN tipe_performance = 'min' AND target>realisasi THEN 100
+                WHEN tipe_performance = 'min' AND target>realisasi THEN 100*bobot/100
                 WHEN tipe_performance = 'min' THEN ((target/realisasi)*100)*bobot/100
                 WHEN tipe_performance = 'max' THEN ((realisasi/target) * 100)*bobot/100
                 END AS skor"))

@@ -31,7 +31,7 @@ class RekapController extends Controller
         $jadwals = Jadwal::all();
         for ($i = 0; $i < sizeof($dinilais); $i++) {
             $performances = PenilaianPerformance::select(DB::raw("CASE
-                WHEN tipe_performance = 'min' AND target>realisasi THEN 100
+                WHEN tipe_performance = 'min' AND target>realisasi THEN 100*bobot/100
                 WHEN tipe_performance = 'min' THEN ((target/realisasi)*100)*bobot/100
                 WHEN tipe_performance = 'max' THEN ((realisasi/target) * 100)*bobot/100
                 END AS skor"))
@@ -41,7 +41,7 @@ class RekapController extends Controller
             $performances = $performances * 70 / 100;
 
             $historyperformance = HistoriPenilaianPerformance::select(DB::raw("CASE
-                WHEN tipe_performance = 'min' AND target>realisasi THEN 100
+                WHEN tipe_performance = 'min' AND target>realisasi THEN 100*bobot/100
                 WHEN tipe_performance = 'min' THEN ((target/realisasi)*100)*bobot/100
                 WHEN tipe_performance = 'max' THEN ((realisasi/target) * 100)*bobot/100
                 END AS skor"))
@@ -116,7 +116,7 @@ class RekapController extends Controller
                 ->get();
             for ($i = 0; $i < sizeof($dinilais); $i++) {
                 $performances = PenilaianPerformance::select(DB::raw("CASE
-                WHEN tipe_performance = 'min' AND target>realisasi THEN 100
+                WHEN tipe_performance = 'min' AND target>realisasi THEN 100*bobot/100
                 WHEN tipe_performance = 'min' THEN ((target/realisasi)*100)*bobot/100
                 WHEN tipe_performance = 'max' THEN ((realisasi/target) * 100)*bobot/100
                 END AS skor"))
@@ -126,7 +126,7 @@ class RekapController extends Controller
                 $performances = $performances * 70 / 100;
 
                 $historyperformance = HistoriPenilaianPerformance::select(DB::raw("CASE
-                WHEN tipe_performance = 'min' AND target>realisasi THEN 100
+                WHEN tipe_performance = 'min' AND target>realisasi THEN 100*bobot/100
                 WHEN tipe_performance = 'min' THEN ((target/realisasi)*100)*bobot/100
                 WHEN tipe_performance = 'max' THEN ((realisasi/target) * 100)*bobot/100
                 END AS skor"))
@@ -193,7 +193,7 @@ class RekapController extends Controller
                 ->get();
             for ($i = 0; $i < sizeof($dinilais); $i++) {
                 $performances = PenilaianPerformance::select(DB::raw("CASE
-                WHEN tipe_performance = 'min' AND target>realisasi THEN 100
+                WHEN tipe_performance = 'min' AND target>realisasi THEN 100*bobot/100
                 WHEN tipe_performance = 'min' THEN ((target/realisasi)*100)*bobot/100
                 WHEN tipe_performance = 'max' THEN ((realisasi/target) * 100)*bobot/100
                 END AS skor"))
@@ -203,7 +203,7 @@ class RekapController extends Controller
                 $performances = $performances * 70 / 100;
 
                 $historyperformance = HistoriPenilaianPerformance::select(DB::raw("CASE
-                WHEN tipe_performance = 'min' AND target>realisasi THEN 100
+                WHEN tipe_performance = 'min' AND target>realisasi THEN 100*bobot/100
                 WHEN tipe_performance = 'min' THEN ((target/realisasi)*100)*bobot/100
                 WHEN tipe_performance = 'max' THEN ((realisasi/target) * 100)*bobot/100
                 END AS skor"))
@@ -272,7 +272,7 @@ class RekapController extends Controller
                 ->get();
             for ($i = 0; $i < sizeof($dinilais); $i++) {
                 $performances = PenilaianPerformance::select(DB::raw("CASE
-                WHEN tipe_performance = 'min' AND target>realisasi THEN 100
+                WHEN tipe_performance = 'min' AND target>realisasi THEN 100*bobot/100
                 WHEN tipe_performance = 'min' THEN ((target/realisasi)*100)*bobot/100
                 WHEN tipe_performance = 'max' THEN ((realisasi/target) * 100)*bobot/100
                 END AS skor"))
@@ -282,7 +282,7 @@ class RekapController extends Controller
                 $performances = $performances * 70 / 100;
 
                 $historyperformance = HistoriPenilaianPerformance::select(DB::raw("CASE
-                WHEN tipe_performance = 'min' AND target>realisasi THEN 100
+                WHEN tipe_performance = 'min' AND target>realisasi THEN 100*bobot/100
                 WHEN tipe_performance = 'min' THEN ((target/realisasi)*100)*bobot/100
                 WHEN tipe_performance = 'max' THEN ((realisasi/target) * 100)*bobot/100
                 END AS skor"))

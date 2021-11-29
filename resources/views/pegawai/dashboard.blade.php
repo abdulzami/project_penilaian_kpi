@@ -57,6 +57,12 @@
                                 <p class="fs-16 mb-0">Membutuhkan Verifikasi</p>
                             </div>
                         </div>
+                        <div class="col-sm-3 mb-4">
+                            <div class="border px-3 py-3 rounded-xl">
+                                <h2 class="fs-32 font-w600 counter">{{sizeof($membutuhkan_verifikasi2)}}</h2>
+                                <p class="fs-16 mb-0">Membutuhkan Verifikasi Dari Banding</p>
+                            </div>
+                        </div>
                         @endatasanpenilai
                         <div class="col-sm-3 mb-4">
                             <div class="border px-3 py-3 rounded-xl">
