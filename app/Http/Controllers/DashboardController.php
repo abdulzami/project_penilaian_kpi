@@ -170,7 +170,7 @@ class DashboardController extends Controller
                     $penilaian = $penilaian[0];
                     $kpiperformances = PenilaianPerformance::select('kpi_performances.kategori', 'kpi_performances.tipe_performance', 'kpi_performances.indikator_kpi', 'kpi_performances.definisi', 'kpi_performances.target', 'kpi_performances.satuan', 'kpi_performances.bobot', 'penilaian_performances.realisasi', 'histori_penilaian_performances.realisasi as realisasi_lama')
                         ->leftjoin('kpi_performances', 'kpi_performances.id_performance', '=', 'penilaian_performances.id_performance')
-                        ->leftJoin('histori_penilaian_performances', 'histori_penilaian_performances.id_penilaian', '=', 'penilaian_performances.id_penilaian')
+                        ->leftJoin('histori_penilaian_performances', 'histori_penilaian_performances.id_performance', '=', 'penilaian_performances.id_performance')
                         ->where('penilaian_performances.id_penilaian', $penilaian->id_penilaian)->get();
                 }
             } else {
