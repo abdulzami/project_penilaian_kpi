@@ -146,7 +146,7 @@ class PegawaiController extends Controller
         try {
             User::where('id_user', $id_pegawai)->first()->delete();
         } catch (\Illuminate\Database\QueryException $ex) {
-            return back()->with('gagal', 'Gagal menghapus pegawai');
+            return back()->with('gagal', 'Pegawai ini tidak bisa dihapus karena sudah di pakai di tabel lainnya');
         }
         return back()->with('success', 'Sukses menghapus pegawai');
     }

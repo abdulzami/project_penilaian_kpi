@@ -119,7 +119,7 @@ class StrukturalController extends Controller
         try {
             Struktural::where('id_struktural', $id_struktural)->first()->delete();
         } catch (\Illuminate\Database\QueryException $ex) {
-            return back()->with('gagal', 'Gagal menghapus struktural');
+            return back()->with('gagal', 'Struktural ini tidak bisa dihapus karena sudah di pakai di tabel lainnya');
         }
         return back()->with('success', 'Sukses menghapus struktural');
     }

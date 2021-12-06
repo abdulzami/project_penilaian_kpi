@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\ApprovePenilaianController;
+use App\Models\HistoriPenilaianPerformance;
 use Error;
 use ErrorException;
 
@@ -166,18 +167,20 @@ class DashboardController extends Controller
                 }
                 if ($penilaian->isEmpty()) {
                     $kpiperformances = "";
+                    $lama = "";
                 } else {
                     $penilaian = $penilaian[0];
-                    $kpiperformances = PenilaianPerformance::select('kpi_performances.kategori', 'kpi_performances.tipe_performance', 'kpi_performances.indikator_kpi', 'kpi_performances.definisi', 'kpi_performances.target', 'kpi_performances.satuan', 'kpi_performances.bobot', 'penilaian_performances.realisasi', 'histori_penilaian_performances.realisasi as realisasi_lama')
+                    $kpiperformances = PenilaianPerformance::select('penilaian_performances.id_performance','kpi_performances.kategori', 'kpi_performances.tipe_performance', 'kpi_performances.indikator_kpi', 'kpi_performances.definisi', 'kpi_performances.target', 'kpi_performances.satuan', 'kpi_performances.bobot', 'penilaian_performances.realisasi')
                         ->leftjoin('kpi_performances', 'kpi_performances.id_performance', '=', 'penilaian_performances.id_performance')
-                        ->leftJoin('histori_penilaian_performances', 'histori_penilaian_performances.id_performance', '=', 'penilaian_performances.id_performance')
-                        ->where('penilaian_performances.id_penilaian', $penilaian->id_penilaian)->get();
+                        ->where('penilaian_performances.id_penilaian', $penilaian->id_penilaian)
+                        ->get();
+                    $lama = HistoriPenilaianPerformance::select('realisasi')->where('histori_penilaian_performances.id_penilaian', $penilaian->id_penilaian)->get();
                 }
             } else {
                 $penilaian = "";
                 $kpiperformances = "";
             }
-
+            
             if (!$jadwal->isEmpty()) {
                 $belum_dinilai = Jabatan::select('users.id_user', 'users.npk', 'users.nama', 'jabatans.nama_jabatan', 'penilaians.status_penilaian', 'strukturals.nama_struktural', 'bidangs.nama_bidang', 'penilaians.id_penilaian', 'penilaians.catatan_penting')
                     ->join('users', 'jabatans.id_jabatan', '=', 'users.id_jabatan')
@@ -233,7 +236,7 @@ class DashboardController extends Controller
                 } catch (ErrorException $e) {
                     $membutuhkan_verifikasi2 = "";
                 }
-                return view('pegawai.dashboard', compact('nama_periode', 'menunggu_verifikasi', 'belum_dinilai', 'selesai', 'banding_penilaian', 'penilaian', 'membutuhkan_verifikasi', 'membutuhkan_verifikasi2', 'kpiperformances', 'hash'));
+                return view('pegawai.dashboard', compact('nama_periode', 'menunggu_verifikasi', 'belum_dinilai', 'selesai', 'banding_penilaian', 'penilaian', 'membutuhkan_verifikasi', 'membutuhkan_verifikasi2', 'kpiperformances', 'hash','lama'));
             } else {
                 return view('pegawai.dashboard');
             }

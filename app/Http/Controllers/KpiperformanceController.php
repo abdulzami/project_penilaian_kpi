@@ -172,7 +172,7 @@ class KpiperformanceController extends Controller
         try {
             $kpips->first()->delete();
         } catch (\Illuminate\Database\QueryException $ex) {
-            return back()->with('gagal', 'Gagal menghapus kpi performance');
+            return back()->with('gagal', 'Kpi Performance ini tidak bisa dihapus karena sudah di pakai di tabel lainnya');
         }
         return back()->with('success', 'Sukses menghapus kpi performance');
     }

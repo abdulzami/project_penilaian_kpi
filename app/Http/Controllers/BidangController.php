@@ -135,7 +135,7 @@ class BidangController extends Controller
         try {
             $bidangs->first()->delete();
         } catch (\Illuminate\Database\QueryException $ex) {
-            return back()->with('gagal', 'Gagal menghapus bidang');
+            return back()->with('gagal', 'Bidang ini tidak bisa dihapus karena sudah di pakai di tabel lainnya');
         }
         return back()->with('success', 'Sukses menghapus bidang');
     }

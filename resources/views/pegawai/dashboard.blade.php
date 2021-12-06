@@ -147,21 +147,23 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach ($kpiperformances as $index => $kpip)
+                                                    @for ($i = 0; $i < sizeof($kpiperformances); $i++)
                                                         <tr>
-                                                            <td>{{ $index + 1 }}</td>
-                                                            <td>{{ $kpip->kategori }}</td>
-                                                            <td>{{ $kpip->tipe_performance }}</td>
-                                                            <td>{{ $kpip->indikator_kpi }}</td>
-                                                            <td>{{ $kpip->definisi }}</td>
-                                                            <td>{{ $kpip->target }} {{ $kpip->satuan }}</td>
-                                                            <td>{{ $kpip->bobot }}</td>
+                                                            <td>{{ $i + 1 }}</td>
+                                                            <td>{{ $kpiperformances[$i]->kategori }}</td>
+                                                            <td>{{ $kpiperformances[$i]->tipe_performance }}</td>
+                                                            <td>{{ $kpiperformances[$i]->indikator_kpi }}</td>
+                                                            <td>{{ $kpiperformances[$i]->definisi }}</td>
+                                                            <td>{{ $kpiperformances[$i]->target }} {{ $kpiperformances[$i]->satuan }}</td>
+                                                            <td>{{ $kpiperformances[$i]->bobot }}</td>
                                                             @if ($penilaian->status_banding == 'diterima')
-                                                                <td>{{ $kpip->realisasi_lama }} {{ $kpip->satuan }}</td>
+                                                                <td>
+                                                                    {{ $lama[$i]->realisasi }}
+                                                                    {{ $kpiperformances[$i]->satuan }}</td>
                                                             @endif
-                                                            <td>{{ $kpip->realisasi }} {{ $kpip->satuan }}</td>
+                                                            <td>{{ $kpiperformances[$i]->realisasi }} {{ $kpiperformances[$i]->satuan }}</td>
                                                         </tr>
-                                                    @endforeach
+                                                    @endfor
                                                 </tbody>
                                             </table>
                                         </div>

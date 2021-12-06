@@ -181,7 +181,7 @@ class JabatanController extends Controller
         try {
             Jabatan::where('id_jabatan', $id_jabatan)->first()->delete();
         } catch (\Illuminate\Database\QueryException $ex) {
-            return back()->with('gagal', 'Gagal menghapus jabatan');
+            return back()->with('gagal', 'Jabatan ini tidak bisa dihapus karena sudah di pakai di tabel lainnya');
         }
         return back()->with('success', 'Sukses menghapus jabatan');
     }

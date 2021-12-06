@@ -246,7 +246,7 @@ class JadwalController extends Controller
         try {
             Jadwal::where('id_jadwal', $id_jadwal)->first()->delete();
         } catch (\Illuminate\Database\QueryException $ex) {
-            return back()->with('gagal', 'Gagal menghapus jadwal');
+            return back()->with('gagal', 'Jadwal tidak bisa dihapus karena sudah di pakai di tabel lainnya');
         }
         return back()->with('success', 'Sukses menghapus jadwal');
     }
