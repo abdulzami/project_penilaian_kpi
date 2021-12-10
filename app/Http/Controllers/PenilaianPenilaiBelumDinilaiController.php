@@ -216,7 +216,7 @@ class PenilaianPenilaiBelumDinilaiController extends Controller
         $id_penilaian = $hash->decode($id);
         request()->validate(
             [
-                'catatan_penting' => 'max:255',
+                'catatan_penting' => 'max:1000',
             ]
         );
         try {
